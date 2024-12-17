@@ -1,0 +1,80 @@
+﻿<Window
+    x:Class="OpenOFM.Ui.Windows.ApplicationWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:OpenOFM.Ui.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:e="clr-namespace:OpenOFM.Ui.Navigation.Events"
+    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+    xmlns:local="clr-namespace:OpenOFM.Ui"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Title="Open OFM"
+    Width="800"
+    Height="450"
+    mc:Ignorable="d">
+    <!--  Navigation with mouse buttons  -->
+    <i:Interaction.Triggers>
+        <e:BackButtonEventTrigger EventName="MouseUp">
+            <i:InvokeCommandAction Command="{Binding NavigateBackCommand}" />
+        </e:BackButtonEventTrigger>
+        <e:NextButtonEventTrigger EventName="MouseUp">
+            <i:InvokeCommandAction Command="{Binding NavigateForwardCommand}" />
+        </e:NextButtonEventTrigger>
+    </i:Interaction.Triggers>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <!--  Sidebar  -->
+        <controls:Sidebar
+            Title="Open OFM"
+            CurrentPageKey="{Binding CurrentPageKey, Mode=TwoWay}"
+            Icon="/Assets/icon.png">
+            <controls:SidebarItem
+                Content="Strona główna"
+                GroupName="NavigationGroup"
+                Icon="&#xE80F;"
+                PageKey="Home" />
+            <controls:SidebarItem
+                Content="Stacje radiowe"
+                GroupName="NavigationGroup"
+                Icon="&#xE90B;"
+                PageKey="RadioStations" />
+            <controls:SidebarItem
+                Content="Ulubione"
+                GroupName="NavigationGroup"
+                Icon="&#xEB51;"
+                PageKey="Favorites" />
+            <controls:SidebarItem
+                Content="Historia"
+                GroupName="NavigationGroup"
+                Icon="&#xE81C;"
+                PageKey="History" />
+            <controls:Sidebar.Footer>
+                <controls:SidebarItem
+                    Content="Ustawienia"
+                    GroupName="NavigationGroup"
+                    Icon="&#xE713;"
+                    PageKey="Settings" />
+            </controls:Sidebar.Footer>
+        </controls:Sidebar>
+
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <!--  Page  -->
+            <ContentControl Content="{Binding CurrentPage}" />
+
+            <!--  Media controls  -->
+            <Border
+                Grid.Row="1"
+                Height="100"
+                Background="#22000000" />
+        </Grid>
+    </Grid>
+</Window>
