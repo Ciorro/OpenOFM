@@ -9,6 +9,6 @@
     d:DesignWidth="800"
     mc:Ignorable="d">
     <Grid>
-        <TextBlock>Home</TextBlock>
+        <TextBlock Style="{StaticResource TitleTextBlockStyle}">Home</TextBlock>
     </Grid>
 </UserControl>
