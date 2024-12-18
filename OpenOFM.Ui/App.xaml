@@ -6,15 +6,16 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
+                <!--  Global styles  -->
+                <ResourceDictionary Source="pack://application:,,,/PresentationFramework.Fluent;component/Themes/Fluent.xaml" />
+
                 <!--  View map  -->
                 <ResourceDictionary Source="/Views/ViewMap.xaml" />
 
                 <!--  Controls  -->
                 <ResourceDictionary Source="Controls/Sidebar.xaml" />
                 <ResourceDictionary Source="Controls/SidebarItem.xaml" />
-
-                <!--  WPF Styles  -->
-                <ResourceDictionary Source="pack://application:,,,/PresentationFramework.Fluent;component/Themes/Fluent.xaml" />
+                <ResourceDictionary Source="Controls/MediaControls.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

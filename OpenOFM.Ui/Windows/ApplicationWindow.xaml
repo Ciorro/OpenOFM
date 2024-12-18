@@ -73,8 +73,12 @@
             <!--  Media controls  -->
             <Border
                 Grid.Row="1"
-                Height="100"
-                Background="#22000000" />
+                Padding="8"
+                Background="{DynamicResource LayerFillColorDefaultBrush}"
+                BorderBrush="{DynamicResource ControlElevationBorderBrush}"
+                BorderThickness="0,1,0,0">
+                <controls:MediaControls />
+            </Border>
         </Grid>
     </Grid>
 </Window>

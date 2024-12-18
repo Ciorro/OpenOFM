@@ -1,0 +1,185 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converters="clr-namespace:OpenOFM.Ui.Converters"
+    xmlns:local="clr-namespace:OpenOFM.Ui.Controls">
+    <Style TargetType="{x:Type local:MediaControls}">
+        <Style.Resources>
+            <ResourceDictionary>
+                <SolidColorBrush x:Key="ToggleButtonBackground" Color="Transparent" />
+                <SolidColorBrush x:Key="ToggleButtonBackgroundChecked" Color="Transparent" />
+                <SolidColorBrush x:Key="ToggleButtonBackgroundCheckedPointerOver" Color="{StaticResource ControlFillColorSecondary}" />
+                <SolidColorBrush x:Key="ToggleButtonBackgroundCheckedPressed" Color="{StaticResource ControlFillColorTertiary}" />
+                <SolidColorBrush x:Key="ToggleButtonBackgroundCheckedDisabled" Color="{StaticResource ControlFillColorDisabled}" />
+            </ResourceDictionary>
+        </Style.Resources>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:MediaControls}">
+                    <Grid Height="48">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <!--  Delay indicators  -->
+                        <TextBlock
+                            VerticalAlignment="Center"
+                            Style="{StaticResource CaptionTextBlockStyle}"
+                            Visibility="{Binding Delay, RelativeSource={RelativeSource TemplatedParent}, Converter={converters:TimeSpanLessThanToVisibilityConverter}}">
+                            <InlineUIContainer BaselineAlignment="Center">
+                                <local:LiveIndicator />
+                            </InlineUIContainer>
+                            <Run>Na żywo</Run>
+                        </TextBlock>
+
+                        <TextBlock
+                            VerticalAlignment="Center"
+                            Style="{StaticResource CaptionTextBlockStyle}"
+                            Visibility="{Binding Delay, RelativeSource={RelativeSource TemplatedParent}, Converter={converters:TimeSpanGreaterThanToVisibilityConverter}}">
+                            <InlineUIContainer BaselineAlignment="Center">
+                                <local:LiveIndicator IsEnabled="False" />
+                            </InlineUIContainer>
+                            <Run>-</Run>
+                            <Run Text="{Binding Delay, StringFormat=hh\\:mm\\:ss, RelativeSource={RelativeSource TemplatedParent}}" />
+                        </TextBlock>
+
+                        <!--  Playback controls  -->
+                        <StackPanel Grid.Column="1" Orientation="Horizontal">
+                            <Button
+                                Padding="8"
+                                Background="Transparent"
+                                BorderThickness="0">
+                                <TextBlock
+                                    VerticalAlignment="Center"
+                                    FontFamily="Segoe FLuent Icons"
+                                    FontSize="14"
+                                    Text="&#xE892;" />
+                            </Button>
+                            <ToggleButton
+                                Margin="5,0"
+                                Padding="12"
+                                BorderBrush="{StaticResource AccentFillColorDefaultBrush}"
+                                BorderThickness="2"
+                                IsChecked="{Binding IsPlaying, RelativeSource={RelativeSource TemplatedParent}}">
+                                <ToggleButton.Style>
+                                    <Style BasedOn="{StaticResource DefaultToggleButtonStyle}" TargetType="ToggleButton">
+                                        <Setter Property="Border.CornerRadius" Value="99" />
+                                        <Style.Triggers>
+                                            <Trigger Property="IsChecked" Value="True">
+                                                <Setter Property="Content">
+                                                    <Setter.Value>
+                                                        <TextBlock
+                                                            FontFamily="Segoe FLuent Icons"
+                                                            FontSize="18"
+                                                            Text="&#xF8AE;" />
+                                                    </Setter.Value>
+                                                </Setter>
+                                            </Trigger>
+                                            <Trigger Property="IsChecked" Value="False">
+                                                <Setter Property="Content">
+                                                    <Setter.Value>
+                                                        <TextBlock
+                                                            FontFamily="Segoe FLuent Icons"
+                                                            FontSize="18"
+                                                            Text="&#xF5B0;" />
+                                                    </Setter.Value>
+                                                </Setter>
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </ToggleButton.Style>
+
+                            </ToggleButton>
+                            <Button
+                                Padding="8"
+                                Background="Transparent"
+                                BorderThickness="0">
+                                <TextBlock
+                                    VerticalAlignment="Center"
+                                    FontFamily="Segoe FLuent Icons"
+                                    FontSize="14"
+                                    Text="&#xE893;" />
+                            </Button>
+                        </StackPanel>
+
+                        <!--  Volume controls  -->
+                        <ToggleButton
+                            x:Name="VolumeButton"
+                            Grid.Column="2"
+                            Padding="8"
+                            HorizontalAlignment="Right"
+                            BorderThickness="0">
+                            <TextBlock
+                                VerticalAlignment="Center"
+                                FontFamily="Segoe FLuent Icons"
+                                FontSize="18"
+                                Text="&#xE767;" />
+                        </ToggleButton>
+
+                        <Popup
+                            AllowsTransparency="True"
+                            HorizontalOffset="-250"
+                            IsOpen="{Binding IsChecked, ElementName=VolumeButton}"
+                            Placement="Right"
+                            PlacementTarget="{Binding ElementName=VolumeButton}"
+                            PopupAnimation="Fade"
+                            StaysOpen="False"
+                            VerticalOffset="-60">
+                            <Border
+                                Width="250"
+                                Padding="10"
+                                Background="{StaticResource SolidBackgroundFillColorSecondaryBrush}"
+                                BorderBrush="{StaticResource SurfaceStrokeColorDefaultBrush}"
+                                BorderThickness="1"
+                                CornerRadius="4">
+                                <DockPanel>
+                                    <ToggleButton
+                                        Grid.Column="2"
+                                        Padding="8"
+                                        HorizontalAlignment="Right"
+                                        BorderThickness="0"
+                                        IsChecked="{Binding IsMuted, RelativeSource={RelativeSource TemplatedParent}}">
+                                        <ToggleButton.Style>
+                                            <Style BasedOn="{StaticResource DefaultToggleButtonStyle}" TargetType="ToggleButton">
+                                                <Style.Triggers>
+                                                    <Trigger Property="IsChecked" Value="True">
+                                                        <Setter Property="Content">
+                                                            <Setter.Value>
+                                                                <TextBlock
+                                                                    FontFamily="Segoe FLuent Icons"
+                                                                    FontSize="18"
+                                                                    Text="&#xE74F;" />
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                    </Trigger>
+                                                    <Trigger Property="IsChecked" Value="False">
+                                                        <Setter Property="Content">
+                                                            <Setter.Value>
+                                                                <TextBlock
+                                                                    FontFamily="Segoe FLuent Icons"
+                                                                    FontSize="18"
+                                                                    Text="&#xE767;" />
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                    </Trigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </ToggleButton.Style>
+                                    </ToggleButton>
+
+                                    <Slider
+                                        Margin="10,0"
+                                        Maximum="1"
+                                        Minimum="0"
+                                        Value="{Binding Volume, RelativeSource={RelativeSource TemplatedParent}}" />
+                                </DockPanel>
+                            </Border>
+                        </Popup>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>
