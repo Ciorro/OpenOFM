@@ -9,9 +9,12 @@
     xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
     xmlns:local="clr-namespace:OpenOFM.Ui"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:views="clr-namespace:OpenOFM.Ui.Views"
     Title="Open OFM"
     Width="1000"
     Height="600"
+    MinWidth="400"
+    MinHeight="350"
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
     <!--  Navigation with mouse buttons  -->
@@ -80,7 +83,7 @@
                 Background="{DynamicResource LayerFillColorDefaultBrush}"
                 BorderBrush="{DynamicResource ControlElevationBorderBrush}"
                 BorderThickness="0,1,0,0">
-                <controls:MediaControls />
+                <views:MediaControlsView DataContext="{Binding MediaControls}" />
             </Border>
         </Grid>
     </Grid>

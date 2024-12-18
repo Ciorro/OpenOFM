@@ -7,6 +7,7 @@ namespace OpenOFM.Ui.ViewModels
     internal partial class ApplicationViewModel : ObservableObject
     {
         private readonly INavigationService _navigation;
+        public MediaControlsViewModel MediaControls { get; } = new();
 
         public ApplicationViewModel(INavigationService navigation)
         {
