@@ -36,7 +36,7 @@
                                 Grid.ColumnSpan="2"
                                 HorizontalAlignment="Center"
                                 FontFamily="Segoe FLuent Icons"
-                                FontSize="19"
+                                FontSize="18"
                                 Text="{TemplateBinding Icon}" />
                             <ContentPresenter
                                 Grid.Column="2"
