@@ -34,7 +34,7 @@
                     <Style.Triggers>
                         <Trigger Property="Control.IsEnabled" Value="True">
                             <Trigger.EnterActions>
-                                <BeginStoryboard>
+                                <BeginStoryboard x:Name="LiveAnimation">
                                     <Storyboard RepeatBehavior="Forever">
                                         <DoubleAnimation
                                             Storyboard.TargetProperty="(RenderTransform).(ScaleTransform.ScaleX)"
@@ -58,6 +58,9 @@
                                     </Storyboard>
                                 </BeginStoryboard>
                             </Trigger.EnterActions>
+                            <Trigger.ExitActions>
+                                <StopStoryboard BeginStoryboardName="LiveAnimation" />
+                            </Trigger.ExitActions>
                         </Trigger>
                         <Trigger Property="Control.IsEnabled" Value="False">
                             <Setter Property="Control.Visibility" Value="Collapsed" />
