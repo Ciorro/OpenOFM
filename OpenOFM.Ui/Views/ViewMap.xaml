@@ -12,9 +12,6 @@
     <DataTemplate DataType="{x:Type vmodels:FavoritesPageViewModel}">
         <views:FavoritesPageView />
     </DataTemplate>
-    <DataTemplate DataType="{x:Type vmodels:HistoryPageViewModel}">
-        <views:HistoryPageView />
-    </DataTemplate>
     <DataTemplate DataType="{x:Type vmodels:SettingsPageViewModel}">
         <views:SettingsPageView />
     </DataTemplate>

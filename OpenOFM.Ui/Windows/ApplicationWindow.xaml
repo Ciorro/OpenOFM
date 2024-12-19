@@ -53,11 +53,6 @@
                 GroupName="NavigationGroup"
                 Icon="&#xEB51;"
                 PageKey="Favorites" />
-            <controls:SidebarItem
-                Content="Historia"
-                GroupName="NavigationGroup"
-                Icon="&#xE81C;"
-                PageKey="History" />
             <controls:Sidebar.Footer>
                 <controls:SidebarItem
                     Content="Ustawienia"
