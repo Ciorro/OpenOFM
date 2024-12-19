@@ -1,7 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>Exe</OutputType>
+	<OutputType Condition="'$(Configuration)' == 'Debug'">Exe</OutputType>
+	<OutputType Condition="'$(Configuration)' == 'Release'">WinExe</OutputType>
     <TargetFramework>net9.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
     <Nullable>enable</Nullable>
@@ -9,13 +10,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Assets\icon.png" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.3.2" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.1" />
-    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.135" />
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.135" /> 
   </ItemGroup>
 
   <ItemGroup>
@@ -23,8 +20,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Behaviors\" />
     <Folder Include="Navigation\Events\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\OpenOFM.Core\OpenOFM.Core.csproj" />
+  </ItemGroup>
 </Project>

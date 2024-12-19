@@ -35,11 +35,11 @@ namespace OpenOFM.Ui.ViewModels
         }
 
         [RelayCommand]
-        private void NavigateBack() 
+        private void NavigateBack()
             => _navigation.Back();
 
         [RelayCommand]
-        private void NavigateForward() 
+        private void NavigateForward()
             => _navigation.Forward();
     }
 }
