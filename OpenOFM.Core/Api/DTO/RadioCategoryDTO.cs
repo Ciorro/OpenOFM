@@ -2,7 +2,7 @@
 
 namespace OpenOFM.Core.Api.DTO
 {
-    public class RadioCategoryDTO
+    internal class RadioCategoryDTO
     {
         public int Id { get; set; }
         public string? Name { get; set; }

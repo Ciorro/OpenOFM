@@ -23,7 +23,7 @@ namespace OpenOFM.Core.Api
 
         public async Task<IEnumerable<RadioStation>> GetRadioStations(CancellationToken ct = default)
         {
-            var response = await _api.Get("/radio/stations");
+            var response = await _api.Get("/radio/stations", ct);
 
             var stations = await GetStations(ct);
             var categories = await GetCategories(ct);
@@ -46,27 +46,27 @@ namespace OpenOFM.Core.Api
 
         private async Task<IEnumerable<RadioStationDTO>> GetStations(CancellationToken ct)
         {
-            var response = await _api.Get("/radio/stations");
+            var response = await _api.Get("/radio/stations", ct);
 
             var stations = await JsonSerializer.DeserializeAsync<Dictionary<int, RadioStationDTO>>(
-                await response.Content.ReadAsStreamAsync(), _jsonOptions);
+                await response.Content.ReadAsStreamAsync(ct), _jsonOptions, ct);
 
             return stations?.Values ?? Enumerable.Empty<RadioStationDTO>();
         }
 
         private async Task<IEnumerable<RadioCategoryDTO>> GetCategories(CancellationToken ct)
         {
-            var response = await _api.Get("/radio/categories");
+            var response = await _api.Get("/radio/categories", ct);
 
             var categories = await JsonSerializer.DeserializeAsync<List<RadioCategoryDTO>>(
-                await response.Content.ReadAsStreamAsync(), _jsonOptions) ?? [];
+                await response.Content.ReadAsStreamAsync(ct), _jsonOptions, ct) ?? [];
 
             return await Task.WhenAll(categories.Select(async x =>
             {
-                var response = await _api.Get($"/radio/category/{x.Slug}");
+                var response = await _api.Get($"/radio/category/{x.Slug}", ct);
 
                 var category = await JsonSerializer.DeserializeAsync<RadioCategoryDTO>(
-                    await response.Content.ReadAsStreamAsync(), _jsonOptions);
+                    await response.Content.ReadAsStreamAsync(ct), _jsonOptions, ct);
 
                 return category ?? new();
             }));
