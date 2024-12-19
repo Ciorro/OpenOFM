@@ -44,6 +44,14 @@ namespace OpenOFM.Core.Api
             }).ToList();
         }
 
+        public async Task<IEnumerable<int>> GetFeaturedRadioStationsIds(CancellationToken ct = default)
+        {
+            var response = await _api.Get("/radio/featured", ct);
+
+            return JsonSerializer.Deserialize<int[]>(
+                await response.Content.ReadAsStreamAsync(ct), _jsonOptions) ?? [];
+        }
+
         private async Task<IEnumerable<RadioStationDTO>> GetStations(CancellationToken ct)
         {
             var response = await _api.Get("/radio/stations", ct);
@@ -58,15 +66,15 @@ namespace OpenOFM.Core.Api
         {
             var response = await _api.Get("/radio/categories", ct);
 
-            var categories = await JsonSerializer.DeserializeAsync<List<RadioCategoryDTO>>(
-                await response.Content.ReadAsStreamAsync(ct), _jsonOptions, ct) ?? [];
+            var categories = JsonSerializer.Deserialize<List<RadioCategoryDTO>>(
+                await response.Content.ReadAsStreamAsync(ct), _jsonOptions) ?? [];
 
             return await Task.WhenAll(categories.Select(async x =>
             {
                 var response = await _api.Get($"/radio/category/{x.Slug}", ct);
 
-                var category = await JsonSerializer.DeserializeAsync<RadioCategoryDTO>(
-                    await response.Content.ReadAsStreamAsync(ct), _jsonOptions, ct);
+                var category = JsonSerializer.Deserialize<RadioCategoryDTO>(
+                    await response.Content.ReadAsStreamAsync(ct), _jsonOptions);
 
                 return category ?? new();
             }));

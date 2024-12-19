@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using OpenOFM.Core.Api;
 using OpenOFM.Ui.Navigation;
 using OpenOFM.Ui.Navigation.Attributes;
+using OpenOFM.Ui.ViewModels;
 using System.Reflection;
 
 namespace OpenOFM.Ui.Extensions
@@ -25,6 +27,18 @@ namespace OpenOFM.Ui.Extensions
                     services.AddKeyedSingleton(typeof(IPage), pageKey, type);
                 }
             }
+        }
+
+        public static void AddViewModels(this IServiceCollection services)
+        {
+            services.AddSingleton<MediaControlsViewModel>();
+        }
+
+        public static void AddApi(this IServiceCollection services)
+        {
+            services.AddSingleton<ApiClient>();
+            services.AddSingleton<StationsApiClient>();
+            services.AddSingleton<PlaylistApiClient>();
         }
     }
 }
