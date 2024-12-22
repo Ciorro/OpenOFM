@@ -2,7 +2,7 @@
 {
     internal interface IPage
     {
-        void OnPaused() { }
-        void OnResumed() { }
+        void OnPaused();
+        void OnResumed();
     }
 }

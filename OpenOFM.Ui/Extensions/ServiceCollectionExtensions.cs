@@ -15,7 +15,7 @@ namespace OpenOFM.Ui.Extensions
 
             foreach (var type in assembly.GetTypes())
             {
-                if (type.IsAssignableTo(typeof(IPage)) && !type.IsInterface)
+                if (type.IsAssignableTo(typeof(IPage)) && !type.IsAbstract)
                 {
                     object pageKey = type.Name;
 

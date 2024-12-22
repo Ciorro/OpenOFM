@@ -7,9 +7,9 @@ namespace OpenOFM.Ui.ViewModels
     internal partial class ApplicationViewModel : ObservableObject
     {
         private readonly INavigationService _navigation;
-        public MediaControlsViewModel MediaControls { get; } = new();
+        public MediaControlsViewModel MediaControls { get; }
 
-        public ApplicationViewModel(INavigationService navigation)
+        public ApplicationViewModel(INavigationService navigation, MediaControlsViewModel mediaControls)
         {
             _navigation = navigation;
             _navigation.Navigated += (pageKey) =>
@@ -18,6 +18,8 @@ namespace OpenOFM.Ui.ViewModels
                 OnPropertyChanged(nameof(CurrentPageKey));
             };
             _navigation.Navigate("Home");
+
+            MediaControls = mediaControls;
         }
 
         public IPage? CurrentPage

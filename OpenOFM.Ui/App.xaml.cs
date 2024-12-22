@@ -1,8 +1,9 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using OpenOFM.Core.Services;
+using OpenOFM.Core.Stores;
 using OpenOFM.Ui.Extensions;
 using OpenOFM.Ui.Navigation;
+using OpenOFM.Ui.Services;
 using OpenOFM.Ui.ViewModels;
 using OpenOFM.Ui.Windows;
 using System.Windows;
@@ -17,7 +18,8 @@ namespace OpenOFM.Ui
         {
             _appHost = Host.CreateDefaultBuilder().ConfigureServices(services =>
             {
-                services.AddSingleton<IRadioStationsService, RadioStationsService>();
+                services.AddSingleton<IPlaylistStore, PlaylistStore>();
+                services.AddSingleton<IStationsStore, StationsStore>();
                 services.AddSingleton<INavigationService, NavigationService>((s) =>
                 {
                     return new NavigationService((pageKey) => s.GetRequiredKeyedService<IPage>(pageKey));
@@ -32,6 +34,9 @@ namespace OpenOFM.Ui
                 {
                     DataContext = s.GetRequiredService<ApplicationViewModel>()
                 });
+
+                services.AddHostedService<PlaylistService>();
+                services.AddHostedService<StationsService>();
 
             }).Build();
         }

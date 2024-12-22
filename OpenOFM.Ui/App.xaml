@@ -9,8 +9,14 @@
                 <!--  Global styles  -->
                 <ResourceDictionary Source="pack://application:,,,/PresentationFramework.Fluent;component/Themes/Fluent.xaml" />
 
-                <!--  View map  -->
-                <ResourceDictionary Source="/Views/ViewMap.xaml" />
+                <!--  Views  -->
+                <ResourceDictionary Source="/Views/Items/RadioStationGridItemView.xaml" />
+                <ResourceDictionary Source="/Views/Items/RadioStationListItemView.xaml" />
+
+                <ResourceDictionary Source="/Views/Pages/HomePageView.xaml" />
+                <ResourceDictionary Source="/Views/Pages/StationsPageView.xaml" />
+                <ResourceDictionary Source="/Views/Pages/FavoritesPageView.xaml" />
+                <ResourceDictionary Source="/Views/Pages/SettingsPageView.xaml" />
 
                 <!--  Controls  -->
                 <ResourceDictionary Source="Controls/Sidebar.xaml" />

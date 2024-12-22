@@ -4,7 +4,7 @@ using OpenOFM.Ui.Navigation.Attributes;
 namespace OpenOFM.Ui.ViewModels.Pages
 {
     [PageKey("Settings")]
-    internal class SettingsPageViewModel : IPage
+    internal class SettingsPageViewModel : BasePageViewModel
     {
     }
 }

@@ -25,8 +25,8 @@ namespace OpenOFM.Core.Api
         {
             var response = await _api.Get("/radio/stations", ct);
 
-            var stations = await GetStations(ct);
-            var categories = await GetCategories(ct);
+            var stations = await GetStationsInternal(ct);
+            var categories = await GetCategoriesInternal(ct);
 
             return stations.Select(x =>
             {
@@ -52,7 +52,12 @@ namespace OpenOFM.Core.Api
                 await response.Content.ReadAsStreamAsync(ct), _jsonOptions) ?? [];
         }
 
-        private async Task<IEnumerable<RadioStationDTO>> GetStations(CancellationToken ct)
+        public async Task<IEnumerable<RadioCategory>> GetRadioStationCategories(CancellationToken ct = default)
+        {
+            return (await GetCategoriesInternal(ct)).Select(x => x.ToModel()).ToList(); 
+        }
+
+        private async Task<IEnumerable<RadioStationDTO>> GetStationsInternal(CancellationToken ct)
         {
             var response = await _api.Get("/radio/stations", ct);
 
@@ -62,7 +67,7 @@ namespace OpenOFM.Core.Api
             return stations?.Values ?? Enumerable.Empty<RadioStationDTO>();
         }
 
-        private async Task<IEnumerable<RadioCategoryDTO>> GetCategories(CancellationToken ct)
+        private async Task<IEnumerable<RadioCategoryDTO>> GetCategoriesInternal(CancellationToken ct)
         {
             var response = await _api.Get("/radio/categories", ct);
 

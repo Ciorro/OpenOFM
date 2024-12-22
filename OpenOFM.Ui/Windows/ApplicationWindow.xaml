@@ -69,7 +69,7 @@
             </Grid.RowDefinitions>
 
             <!--  Page  -->
-            <ContentControl Margin="16,52,0,0" Content="{Binding CurrentPage}" />
+            <ContentControl Margin="0,52,0,0" Content="{Binding CurrentPage}" />
 
             <!--  Media controls  -->
             <Border

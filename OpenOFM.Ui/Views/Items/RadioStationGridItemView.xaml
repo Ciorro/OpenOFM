@@ -1,0 +1,77 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:cachedImage="clr-namespace:CachedImage;assembly=CachedImage"
+    xmlns:controls="clr-namespace:OpenOFM.Ui.Controls"
+    xmlns:converters="clr-namespace:OpenOFM.Ui.Converters">
+    <DataTemplate x:Key="RadioStationGridItem">
+        <Button
+            Padding="5"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch"
+            HorizontalContentAlignment="Stretch"
+            Command="{Binding PlayCommand}">
+            <Grid>
+                <DockPanel>
+                    <Border VerticalAlignment="Top">
+                        <cachedImage:Image
+                            Width="64"
+                            Height="64"
+                            ImageUrl="{Binding CoverUrl, IsAsync=True}"
+                            RenderOptions.BitmapScalingMode="Fant" />
+                        <Border.OpacityMask>
+                            <VisualBrush>
+                                <VisualBrush.Visual>
+                                    <Border
+                                        Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=Border}}"
+                                        Height="{Binding ActualHeight, RelativeSource={RelativeSource AncestorType=Border}}"
+                                        Background="White"
+                                        CornerRadius="4" />
+                                </VisualBrush.Visual>
+                            </VisualBrush>
+                        </Border.OpacityMask>
+                    </Border>
+
+                    <StackPanel Margin="5,0,0,0">
+                        <TextBlock
+                            Grid.Column="1"
+                            Margin="2,0,0,0"
+                            FontWeight="Medium"
+                            Text="{Binding Name}" />
+                        <ItemsControl ItemsSource="{Binding Categories}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Horizontal" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border
+                                        Margin="2"
+                                        Padding="2"
+                                        Background="{StaticResource ControlFillColorDefaultBrush}"
+                                        CornerRadius="2">
+                                        <TextBlock
+                                            FontSize="10"
+                                            Foreground="{StaticResource TextFillColorSecondaryBrush}"
+                                            Text="{Binding Name}" />
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                        <TextBlock
+                            Margin="2"
+                            FontSize="12"
+                            Text="{Binding CurrentSong}" />
+                    </StackPanel>
+                </DockPanel>
+                <controls:LiveIndicator
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Top"
+                    IsEnabled="{Binding IsPlaying}"
+                    SnapsToDevicePixels="False"
+                    Visibility="{Binding IsPlaying, Converter={converters:BooleanToVisibilityConverter}}" />
+            </Grid>
+        </Button>
+    </DataTemplate>
+</ResourceDictionary>
