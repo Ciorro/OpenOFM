@@ -39,6 +39,7 @@ namespace OpenOFM.Ui.Extensions
             services.AddSingleton<ApiClient>();
             services.AddSingleton<StationsApiClient>();
             services.AddSingleton<PlaylistApiClient>();
+            services.AddSingleton<TokenApiClient>();
         }
     }
 }
