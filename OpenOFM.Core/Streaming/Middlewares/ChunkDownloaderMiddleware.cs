@@ -6,12 +6,10 @@ namespace OpenOFM.Core.Streaming.Middlewares
     {
         private readonly Queue<IChunk> _buffer = new();
         private readonly HttpClient _httpClient;
-        private readonly Uri _baseUrl;
 
-        public ChunkDownloaderMiddleware(HttpClient httpClient, Uri baseUrl)
+        public ChunkDownloaderMiddleware(HttpClient httpClient)
         {
             _httpClient = httpClient;
-            _baseUrl = baseUrl;
         }
 
         public TimeSpan BufferedDuration
@@ -27,9 +25,7 @@ namespace OpenOFM.Core.Streaming.Middlewares
                     $"Invalid input chunk type. Expected {typeof(M3UChunk)}", nameof(chunk));
             }
 
-            string chunkUrl = _baseUrl + "/" + m3UChunk.Filename;
-            var data = await _httpClient.GetByteArrayAsync(chunkUrl, ct);
-
+            var data = await _httpClient.GetByteArrayAsync(m3UChunk.ChunkUrl, ct);
             _buffer.Enqueue(new DataChunk(m3UChunk.SequenceNumber, m3UChunk.Duration, data));
         }
 

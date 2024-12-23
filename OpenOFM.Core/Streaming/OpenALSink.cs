@@ -2,10 +2,12 @@
 using OpenTK.Audio.OpenAL;
 using System.Collections.Concurrent;
 
-namespace OpenOFM.Core.Streaming.Playback
+namespace OpenOFM.Core.Streaming
 {
-    public class OpenALPlayer : IChunkSink, IDisposable
+    public class OpenALSink : IChunkSink, IDisposable
     {
+        private static int Instances;
+
         private readonly ConcurrentQueue<IChunk> _buffer = new();
 
         private const int NumBuffers = 4;
@@ -20,12 +22,15 @@ namespace OpenOFM.Core.Streaming.Playback
         private CancellationTokenSource? _cts;
         private Task? _playbackLoopTask;
 
-        public OpenALPlayer()
+        public OpenALSink()
         {
-            //Initialize OpenAL
-            _device = ALC.OpenDevice(null);
-            _context = ALC.CreateContext(_device, new ALContextAttributes());
-            ALC.MakeContextCurrent(_context);
+            if (Instances++ == 0)
+            {
+                //Initialize OpenAL
+                _device = ALC.OpenDevice(null);
+                _context = ALC.CreateContext(_device, new ALContextAttributes());
+                ALC.MakeContextCurrent(_context);
+            }
 
             //Create buffers
             _buffers = new int[NumBuffers];
@@ -36,28 +41,6 @@ namespace OpenOFM.Core.Streaming.Playback
             AL.Source(_source, ALSourcef.Gain, 1);
         }
 
-        public bool IsPlaying
-        {
-            get => _playbackLoopTask?.IsCompleted == false &&
-                AL.GetSource(_source, ALGetSourcei.SourceState) == (int)ALSourceState.Playing;
-        }
-
-        public bool IsPaused
-        {
-            get => AL.GetSource(_source, ALGetSourcei.SourceState) == (int)ALSourceState.Paused;
-            set
-            {
-                if (value)
-                {
-                    AL.SourcePause(_source);
-                }
-                else
-                {
-                    AL.SourcePlay(_source);
-                }
-            }
-        }
-
         public float Volume
         {
             get => AL.GetSource(_source, ALSourcef.Gain);
@@ -66,26 +49,42 @@ namespace OpenOFM.Core.Streaming.Playback
 
         public void Play()
         {
-            _cts = new CancellationTokenSource();
-            _playbackLoopTask = Task.Run(async () =>
+            if (AL.GetSource(_source, ALGetSourcei.SourceState) == (int)ALSourceState.Paused)
             {
-                try
+                AL.SourcePlay(_source);
+            }
+
+            if (_playbackLoopTask?.IsCompleted ?? true)
+            {
+                _cts = new CancellationTokenSource();
+                _playbackLoopTask = Task.Run(async () =>
                 {
-                    await PlaybackLoop(_cts.Token);
-                }
-                catch
-                {
-                    AL.SourceStop(_source);
-                    AL.SourceUnqueueBuffers(_source, _buffers);
-                }
-            });
+                    try
+                    {
+                        await PlaybackLoop(_cts.Token);
+                    }
+                    catch
+                    {
+                        AL.SourceStop(_source);
+                        AL.SourceUnqueueBuffers(_source, _buffers);
+                    }
+                });
+            }
         }
 
         public void Stop()
         {
+            _buffer.Clear();
             _cts?.Cancel();
             _playbackLoopTask?.Wait();
-            _buffer.Clear();
+        }
+
+        public void Pause()
+        {
+            if (AL.GetSource(_source, ALGetSourcei.SourceState) == (int)ALSourceState.Playing)
+            {
+                AL.SourcePause(_source);
+            }
         }
 
         public Task WriteChunkAsync(IChunk chunk, CancellationToken ct = default)
@@ -107,6 +106,8 @@ namespace OpenOFM.Core.Streaming.Playback
             //Initialize buffers
             for (int i = 0; i < NumBuffers;)
             {
+                cancellationToken.ThrowIfCancellationRequested();
+
                 if (_buffer.TryDequeue(out var c) && c is DataChunk chunk)
                 {
                     AL.BufferData(_buffers[i], ALFormat.Stereo16, chunk.Data, 48000);
@@ -122,6 +123,8 @@ namespace OpenOFM.Core.Streaming.Playback
             {
                 while (AL.GetSource(_source, ALGetSourcei.BuffersProcessed) > 0)
                 {
+                    cancellationToken.ThrowIfCancellationRequested();
+
                     if (_buffer.TryDequeue(out var c) && c is DataChunk chunk)
                     {
                         int alBuffer = AL.SourceUnqueueBuffer(_source);
@@ -131,7 +134,7 @@ namespace OpenOFM.Core.Streaming.Playback
                     }
                 }
 
-                await Task.Delay(100);
+                await Task.Delay(100, cancellationToken);
             }
 
             AL.SourceStop(_source);
@@ -145,8 +148,12 @@ namespace OpenOFM.Core.Streaming.Playback
             //OpenAL cleanup
             AL.DeleteSource(_source);
             AL.DeleteBuffers(_buffers);
-            ALC.CloseDevice(_device);
-            ALC.DestroyContext(_context);
+
+            if (--Instances == 0)
+            {
+                ALC.CloseDevice(_device);
+                ALC.DestroyContext(_context);
+            }
         }
     }
 }

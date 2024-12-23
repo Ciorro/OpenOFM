@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using OpenOFM.Core.Services;
 using OpenOFM.Core.Stores;
 using OpenOFM.Ui.Extensions;
 using OpenOFM.Ui.Navigation;
@@ -18,6 +19,7 @@ namespace OpenOFM.Ui
         {
             _appHost = Host.CreateDefaultBuilder().ConfigureServices(services =>
             {
+                services.AddSingleton<IPlayerService, PlayerService>();
                 services.AddSingleton<IPlaylistStore, PlaylistStore>();
                 services.AddSingleton<IStationsStore, StationsStore>();
                 services.AddSingleton<INavigationService, NavigationService>((s) =>

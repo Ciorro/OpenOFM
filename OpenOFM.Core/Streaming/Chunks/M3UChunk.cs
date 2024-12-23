@@ -4,13 +4,13 @@
     {
         public int SequenceNumber { get; set; }
         public TimeSpan Duration { get; set; }
-        public string Filename { get; set; }
+        public string ChunkUrl { get; set; }
 
-        public M3UChunk(int sequence, TimeSpan duration, string filename)
+        public M3UChunk(int sequence, TimeSpan duration, string chunkUrl)
         {
             SequenceNumber = sequence;
             Duration = duration;
-            Filename = filename;
+            ChunkUrl = chunkUrl;
         }
     }
 }

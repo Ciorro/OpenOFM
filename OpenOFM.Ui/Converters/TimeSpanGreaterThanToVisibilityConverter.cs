@@ -14,7 +14,7 @@ namespace OpenOFM.Ui.Converters
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var maxTimeSpan = (parameter as TimeSpan?) ?? TimeSpan.FromSeconds(10);
+            var maxTimeSpan = (parameter as TimeSpan?) ?? TimeSpan.Zero;
 
             return value is TimeSpan timeSpan && timeSpan > maxTimeSpan ?
                 Visibility.Visible :

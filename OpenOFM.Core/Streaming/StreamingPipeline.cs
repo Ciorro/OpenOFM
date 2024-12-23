@@ -4,13 +4,18 @@
     {
         private readonly List<IChunkMiddleware> _middlewares = new();
 
-        public IChunkSource Source { get; }
-        public IChunkSink Sink { get; }
+        private readonly IChunkSource _source;
+        private readonly IChunkSink _sink;
 
         public StreamingPipeline(IChunkSource source, IChunkSink sink)
         {
-            Source = source;
-            Sink = sink;
+            _source = source;
+            _sink = sink;
+        }
+
+        public IReadOnlyCollection<object> Middlewares
+        {
+            get => (_middlewares as IEnumerable<object>).Prepend(_source).Append(_sink).ToList();
         }
 
         public StreamingPipeline AddMiddleware(IChunkMiddleware middleware)
@@ -25,10 +30,10 @@
             return this;
         }
 
-        public async Task Process()
+        public async Task Process(CancellationToken ct)
         {
             var steps = (_middlewares as IEnumerable<object>)
-                .Prepend(Source).Append(Sink).ToList();
+                .Prepend(_source).Append(_sink).ToList();
 
             for (int i = 0; i < steps.Count - 1; i++)
             {
@@ -37,7 +42,7 @@
 
                 if (sink is not null && source is not null)
                 {
-                    await WriteAllChunks(sink, await ReadAllChunks(source));
+                    await WriteAllChunks(sink, await ReadAllChunks(source, ct), ct);
                 }
             }
         }

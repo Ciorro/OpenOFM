@@ -2,18 +2,19 @@
 
 namespace OpenOFM.Core.Streaming.M3U
 {
-    public class M3UWebSource : IChunkSource, IDisposable
+    public class M3UWebSource : IChunkSource
     {
         private readonly Queue<M3UChunk> _buffer = new();
+
         private readonly HttpClient _http;
         private readonly Uri _m3uPlaylistUrl;
         private readonly Uri _streamBaseUrl;
 
-        private int _lastSequence;
         private M3UPlaylist? _m3uPlaylist;
         private DateTime _lastDownloadTime;
+        private int _lastSequence;
 
-        public M3UWebSource(HttpClient httpClient, Uri m3uPlaylistUrl)
+        public M3UWebSource(Uri m3uPlaylistUrl, HttpClient httpClient)
         {
             ArgumentNullException.ThrowIfNull(m3uPlaylistUrl, nameof(m3uPlaylistUrl));
 
@@ -59,16 +60,14 @@ namespace OpenOFM.Core.Streaming.M3U
 
         private async Task<IList<M3UChunk>> GetChunklist(CancellationToken ct)
         {
-            string url = _streamBaseUrl + _m3uPlaylist!.ChunklistFilename + _m3uPlaylistUrl.Query;
+            var url = _streamBaseUrl + _m3uPlaylist!.ChunklistFilename;
+            var chunks = await M3UParser.ParseChunklistAsync(await _http.GetStreamAsync(url));
 
-            try
+            return chunks.Select(x =>
             {
-                return await M3UParser.ParseChunklistAsync(await _http.GetStreamAsync(url));
-            }
-            catch
-            {
-                return [];
-            }
+                x.ChunkUrl = _streamBaseUrl + x.ChunkUrl;
+                return x;
+            }).ToList();
         }
 
         private bool ShouldDownload()
@@ -82,11 +81,6 @@ namespace OpenOFM.Core.Streaming.M3U
             }
 
             return false;
-        }
-
-        public void Dispose()
-        {
-            _http.Dispose();
         }
     }
 }

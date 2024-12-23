@@ -63,9 +63,9 @@ namespace OpenOFM.Core.Streaming.M3U
                 {
                     var duration = TimeSpan.FromSeconds(
                         float.Parse(line["#EXTINF:".Length..^1], CultureInfo.InvariantCulture));
-                    var downloadUrl = (await reader.ReadLineAsync())!;
+                    var filename = (await reader.ReadLineAsync())!;
 
-                    chunks.Add(new M3UChunk(sequence, duration, downloadUrl));
+                    chunks.Add(new M3UChunk(sequence, duration, filename));
 
                     sequence++;
                 }

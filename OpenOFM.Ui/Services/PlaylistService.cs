@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Hosting;
 using OpenOFM.Core.Api;
 using OpenOFM.Core.Stores;
+using System.Net.Http;
 
 namespace OpenOFM.Ui.Services
 {
@@ -19,10 +20,14 @@ namespace OpenOFM.Ui.Services
         {
             while (!stoppingToken.IsCancellationRequested)
             {
-                foreach (var playlist in await _playlistApi.GetPlaylists(stoppingToken))
+                try
                 {
-                    _playlists.AddPlaylist(playlist);
+                    foreach (var playlist in await _playlistApi.GetPlaylists(stoppingToken))
+                    {
+                        _playlists.AddPlaylist(playlist);
+                    }
                 }
+                catch (HttpRequestException) { }
 
                 await Task.Delay(TimeSpan.FromSeconds(15));
             }

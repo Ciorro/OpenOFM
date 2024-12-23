@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Hosting;
 using OpenOFM.Core.Api;
 using OpenOFM.Core.Stores;
+using System.Net.Http;
 
 namespace OpenOFM.Ui.Services
 {
@@ -19,12 +20,14 @@ namespace OpenOFM.Ui.Services
         {
             while (!stoppingToken.IsCancellationRequested)
             {
-
-
-                foreach (var station in await _stationsApi.GetRadioStations(stoppingToken))
+                try
                 {
-                    _stations.AddStation(station);
+                    foreach (var station in await _stationsApi.GetRadioStations(stoppingToken))
+                    {
+                        _stations.AddStation(station);
+                    }
                 }
+                catch (HttpRequestException) { }
 
                 await Task.Delay(TimeSpan.FromDays(1));
             }

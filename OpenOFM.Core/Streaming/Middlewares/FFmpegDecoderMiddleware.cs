@@ -104,11 +104,6 @@ namespace OpenOFM.Core.Streaming.Middlewares
 
             _ffmpeg.Kill();
             _ffmpeg.Dispose();
-
-            Task.WaitAll(
-                _inputReaderTask.WaitAsync(CancellationToken.None),
-                _outputReaderTask.WaitAsync(CancellationToken.None)
-            );
         }
     }
 }

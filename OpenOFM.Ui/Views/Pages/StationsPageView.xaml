@@ -26,16 +26,17 @@
                 </ItemsControl.ItemContainerStyle>
                 <ItemsControl.Template>
                     <ControlTemplate TargetType="ItemsControl">
-                        <ScrollViewer
-                            CanContentScroll="True"
-                            Focusable="False">
+                        <ScrollViewer CanContentScroll="True" Focusable="False">
                             <ItemsPresenter />
                         </ScrollViewer>
                     </ControlTemplate>
                 </ItemsControl.Template>
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <VirtualizingStackPanel IsVirtualizing="True" VirtualizationMode="Recycling" Margin="16,0,16,16" />
+                        <VirtualizingStackPanel
+                            Margin="16,0,16,16"
+                            IsVirtualizing="True"
+                            VirtualizationMode="Recycling" />
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
             </ItemsControl>
