@@ -1,19 +1,18 @@
 ﻿namespace OpenOFM.Core.Streaming.Middlewares
 {
-    public class PauseBufferMiddleware : IChunkMiddleware
+    public class MemoryRecorderMiddleware : IChunkMiddleware
     {
         private readonly Queue<IChunk> _buffer = new();
         private readonly TimeSpan _maxBufferDuration;
 
         public bool IsPaused { get; set; }
 
-        public PauseBufferMiddleware(TimeSpan maxBufferDuration)
-        {
-            if (maxBufferDuration < TimeSpan.FromSeconds(10))
-            {
-                throw new ArgumentException("The minimum buffer duration is 10s", nameof(maxBufferDuration));
-            }
+        public MemoryRecorderMiddleware()
+            : this(TimeSpan.FromHours(1))
+        { }
 
+        public MemoryRecorderMiddleware(TimeSpan maxBufferDuration)
+        {
             _maxBufferDuration = maxBufferDuration;
         }
 
