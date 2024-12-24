@@ -5,12 +5,9 @@ using System.Text;
 
 namespace OpenOFM.Ui.ViewModels.Items
 {
-    public delegate void RadioStationSelectedHandler(object sender, RadioStation radioStation);
-
     internal partial class RadioStationItemViewModel : ObservableObject
     {
         private readonly RadioStation _radioStation;
-        public event RadioStationSelectedHandler? Selected;
 
         [ObservableProperty]
         private bool _isPlaying;
@@ -18,6 +15,8 @@ namespace OpenOFM.Ui.ViewModels.Items
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(CurrentSong))]
         private Playlist? _playlist;
+
+        public Action<RadioStation>? OnSelected { get; set; }
 
         public RadioStationItemViewModel(RadioStation radioStation)
         {
@@ -54,9 +53,9 @@ namespace OpenOFM.Ui.ViewModels.Items
         }
 
         [RelayCommand]
-        private void OnSelected()
+        private void OnClick()
         {
-            Selected?.Invoke(this, _radioStation);
+            OnSelected?.Invoke(_radioStation);
         }
     }
 }

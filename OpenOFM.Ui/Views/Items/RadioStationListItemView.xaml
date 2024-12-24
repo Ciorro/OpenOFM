@@ -9,8 +9,9 @@
             Padding="0"
             HorizontalAlignment="Stretch"
             HorizontalContentAlignment="Stretch"
-            Command="{Binding SelectedCommand}">
-            <Border BorderThickness="2" CornerRadius="4">
+            Command="{Binding ClickCommand}"
+            SnapsToDevicePixels="False">
+            <Border BorderThickness="2" CornerRadius="3">
                 <Border.Style>
                     <Style TargetType="Border">
                         <Style.Triggers>
@@ -21,7 +22,7 @@
                     </Style>
                 </Border.Style>
 
-                <Grid>
+                <Grid SnapsToDevicePixels="True">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="*" />

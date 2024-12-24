@@ -9,7 +9,6 @@
     xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
     xmlns:local="clr-namespace:OpenOFM.Ui"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:views="clr-namespace:OpenOFM.Ui.Views"
     Title="Open OFM"
     Width="1000"
     Height="600"
@@ -26,6 +25,7 @@
             <i:InvokeCommandAction Command="{Binding NavigateForwardCommand}" />
         </e:NextButtonEventTrigger>
     </i:Interaction.Triggers>
+    
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
@@ -54,6 +54,13 @@
                 Icon="&#xEB51;"
                 PageKey="Favorites" />
             <controls:Sidebar.Footer>
+                <controls:SidebarItem GroupName="NavigationGroup" PageKey="Player">
+                    <controls:SidebarItem.Template>
+                        <ControlTemplate>
+                            <TextBlock Text="{Binding CurrentPageKey}" />
+                        </ControlTemplate>
+                    </controls:SidebarItem.Template>
+                </controls:SidebarItem>
                 <controls:SidebarItem
                     Content="Ustawienia"
                     GroupName="NavigationGroup"
@@ -78,7 +85,11 @@
                 Background="{DynamicResource LayerFillColorDefaultBrush}"
                 BorderBrush="{DynamicResource ControlElevationBorderBrush}"
                 BorderThickness="0,1,0,0">
-                <views:MediaControlsView DataContext="{Binding MediaControls}" />
+                <controls:MediaControls
+                    Delay="{Binding Delay}"
+                    IsMuted="{Binding IsMuted}"
+                    IsPaused="{Binding IsPaused}"
+                    Volume="{Binding Volume}" />
             </Border>
         </Grid>
     </Grid>

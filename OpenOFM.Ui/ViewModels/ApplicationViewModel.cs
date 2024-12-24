@@ -1,16 +1,37 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using OpenOFM.Core.Services;
 using OpenOFM.Ui.Navigation;
+using System.Windows.Threading;
 
 namespace OpenOFM.Ui.ViewModels
 {
     internal partial class ApplicationViewModel : ObservableObject
     {
         private readonly INavigationService _navigation;
-        public MediaControlsViewModel MediaControls { get; }
+        private readonly IPlayerService _playerService;
 
-        public ApplicationViewModel(INavigationService navigation, MediaControlsViewModel mediaControls)
+        [ObservableProperty]
+        private bool _isPaused;
+
+        [ObservableProperty]
+        private bool _isMuted;
+
+        [ObservableProperty]
+        private float _volume = 100;
+
+        [ObservableProperty]
+        private TimeSpan _delay;
+
+        public ApplicationViewModel(INavigationService navigation, IPlayerService playerService)
         {
+            _playerService = playerService;
+            _playerService.StationChanged += (_, __) =>
+            {
+                IsPaused = false;
+                Delay = TimeSpan.Zero;
+            };
+
             _navigation = navigation;
             _navigation.Navigated += (pageKey) =>
             {
@@ -19,7 +40,13 @@ namespace OpenOFM.Ui.ViewModels
             };
             _navigation.Navigate("Home");
 
-            MediaControls = mediaControls;
+            var delayRefreshTimer = new DispatcherTimer();
+            delayRefreshTimer.Interval = TimeSpan.FromSeconds(1);
+            delayRefreshTimer.Tick += (_, __) =>
+            {
+                Delay = _playerService.GetDelay();
+            };
+            delayRefreshTimer.Start();
         }
 
         public IPage? CurrentPage
@@ -43,5 +70,30 @@ namespace OpenOFM.Ui.ViewModels
         [RelayCommand]
         private void NavigateForward()
             => _navigation.Forward();
+
+        partial void OnIsPausedChanged(bool value)
+        {
+            _playerService.IsPaused = value;
+        }
+
+        partial void OnIsMutedChanged(bool value)
+        {
+            if (value)
+            {
+                _playerService.Volume = 0;
+            }
+            else
+            {
+                _playerService.Volume = Volume / 100f;
+            }
+        }
+
+        partial void OnVolumeChanged(float value)
+        {
+            if (!IsMuted)
+            {
+                _playerService.Volume = value / 100f;
+            }
+        }
     }
 }

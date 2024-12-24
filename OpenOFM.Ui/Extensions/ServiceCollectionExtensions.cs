@@ -31,7 +31,7 @@ namespace OpenOFM.Ui.Extensions
 
         public static void AddViewModels(this IServiceCollection services)
         {
-            services.AddSingleton<MediaControlsViewModel>();
+            //services.AddSingleton<MediaControlsViewModel>();
         }
 
         public static void AddApi(this IServiceCollection services)

@@ -19,8 +19,9 @@
                 <ResourceDictionary Source="/Views/Pages/SettingsPageView.xaml" />
 
                 <!--  Controls  -->
-                <ResourceDictionary Source="Controls/Sidebar.xaml" />
-                <ResourceDictionary Source="Controls/SidebarItem.xaml" />
+                <ResourceDictionary Source="/Controls/Sidebar.xaml" />
+                <ResourceDictionary Source="/Controls/SidebarItem.xaml" />
+                <ResourceDictionary Source="/Controls/MediaControls.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

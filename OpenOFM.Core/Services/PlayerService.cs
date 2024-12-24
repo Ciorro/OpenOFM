@@ -6,6 +6,8 @@ namespace OpenOFM.Core.Services
 {
     public class PlayerService : IPlayerService
     {
+        public event StationChangedEventHandler? StationChanged;
+
         private readonly TokenApiClient _tokenApi;
         private readonly HttpClient _httpClient;
 
@@ -47,11 +49,6 @@ namespace OpenOFM.Core.Services
             }
         }
 
-        public TimeSpan Delay
-        {
-            get => _player?.Delay ?? TimeSpan.Zero;
-        }
-
         public RadioStation? CurrentStation
         {
             get => _currentStation;
@@ -59,18 +56,19 @@ namespace OpenOFM.Core.Services
 
         public async Task Play(RadioStation radioStation)
         {
+            var streamUrl = await _tokenApi.AppendToken(radioStation.StreamUrl!);
+
             if (_player is not null)
             {
                 Stop();
             }
-
-            var streamUrl = await _tokenApi.AppendToken(radioStation.StreamUrl!);
 
             _player = new Player(new Uri(streamUrl), _httpClient);
             _player.Play();
             _player.Volume = Volume;
 
             _currentStation = radioStation;
+            StationChanged?.Invoke(this, radioStation);
         }
 
         public void Stop()
@@ -80,6 +78,12 @@ namespace OpenOFM.Core.Services
             _player = null;
 
             _currentStation = null;
+            StationChanged?.Invoke(this, null);
+        }
+
+        public TimeSpan GetDelay()
+        {
+            return _player?.Delay ?? TimeSpan.Zero;
         }
     }
 }
