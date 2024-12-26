@@ -16,6 +16,7 @@
                 <ResourceDictionary Source="/Views/Pages/HomePageView.xaml" />
                 <ResourceDictionary Source="/Views/Pages/StationsPageView.xaml" />
                 <ResourceDictionary Source="/Views/Pages/FavoritesPageView.xaml" />
+                <ResourceDictionary Source="/Views/Pages/PlayerPageView.xaml" />
                 <ResourceDictionary Source="/Views/Pages/SettingsPageView.xaml" />
 
                 <!--  Controls  -->

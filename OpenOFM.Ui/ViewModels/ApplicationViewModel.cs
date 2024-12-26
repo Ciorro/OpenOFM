@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using OpenOFM.Core.Models;
 using OpenOFM.Core.Services;
 using OpenOFM.Ui.Navigation;
 using System.Windows.Threading;
@@ -23,13 +24,17 @@ namespace OpenOFM.Ui.ViewModels
         [ObservableProperty]
         private TimeSpan _delay;
 
+        [ObservableProperty]
+        private RadioStation? _currentStation;
+
         public ApplicationViewModel(INavigationService navigation, IPlayerService playerService)
         {
             _playerService = playerService;
-            _playerService.StationChanged += (_, __) =>
+            _playerService.StationChanged += (sender, station) =>
             {
                 IsPaused = false;
                 Delay = TimeSpan.Zero;
+                CurrentStation = station;
             };
 
             _navigation = navigation;

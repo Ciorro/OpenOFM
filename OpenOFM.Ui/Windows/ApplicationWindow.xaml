@@ -6,6 +6,7 @@
     xmlns:converters="clr-namespace:OpenOFM.Ui.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:e="clr-namespace:OpenOFM.Ui.Navigation.Events"
+    xmlns:fi="clr-namespace:FluentIcons.Wpf;assembly=FluentIcons.Wpf"
     xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
     xmlns:local="clr-namespace:OpenOFM.Ui"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -25,7 +26,7 @@
             <i:InvokeCommandAction Command="{Binding NavigateForwardCommand}" />
         </e:NextButtonEventTrigger>
     </i:Interaction.Triggers>
-    
+
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
@@ -66,6 +67,34 @@
             </controls:SidebarItem>
             
             <controls:Sidebar.Footer>
+                <controls:SidebarItem
+                    GroupName="NavigationGroup"
+                    PageKey="Player"
+                    Visibility="{Binding CurrentStation, Converter={converters:ValueNotNullToVisibilityConverter}}">
+                    <controls:SidebarItem.Resources>
+                        <Brush x:Key="AccentFillColorDefaultBrush">Transparent</Brush>
+                    </controls:SidebarItem.Resources>
+                    <controls:SidebarItem.Icon>
+                        <Border Width="32" Height="32">
+                            <Image RenderOptions.BitmapScalingMode="Fant" Source="{Binding CurrentStation.CoverUrl}" />
+                            <Border.OpacityMask>
+                                <VisualBrush>
+                                    <VisualBrush.Visual>
+                                        <Border
+                                            Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=Border}}"
+                                            Height="{Binding ActualHeight, RelativeSource={RelativeSource AncestorType=Border}}"
+                                            Background="White"
+                                            CornerRadius="4" />
+                                    </VisualBrush.Visual>
+                                </VisualBrush>
+                            </Border.OpacityMask>
+                        </Border>
+                    </controls:SidebarItem.Icon>
+                    
+                    <StackPanel>
+                        <TextBlock FontSize="12" FontWeight="Medium">Teraz odtwarzane:</TextBlock>
+                        <TextBlock FontSize="12" Text="{Binding CurrentStation.Name}" />
+                    </StackPanel>
                 </controls:SidebarItem>
                 
                 <controls:SidebarItem
@@ -94,7 +123,8 @@
                 Padding="8"
                 Background="{DynamicResource LayerFillColorDefaultBrush}"
                 BorderBrush="{DynamicResource ControlElevationBorderBrush}"
-                BorderThickness="0,1,0,0">
+                BorderThickness="0,1,0,0"
+                Visibility="{Binding CurrentStation, Converter={converters:ValueNotNullToVisibilityConverter}}">
                 <controls:MediaControls
                     Delay="{Binding Delay}"
                     IsMuted="{Binding IsMuted}"
