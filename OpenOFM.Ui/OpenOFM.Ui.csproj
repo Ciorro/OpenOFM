@@ -12,6 +12,7 @@
   <ItemGroup>
     <PackageReference Include="CachedImage" Version="0.1.15" />
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.3.2" />
+    <PackageReference Include="FluentIcons.Wpf" Version="1.1.271" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.1" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.135" /> 
   </ItemGroup>

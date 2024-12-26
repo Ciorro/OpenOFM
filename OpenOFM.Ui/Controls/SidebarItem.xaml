@@ -9,10 +9,9 @@
                     <Border
                         Name="border"
                         Margin="0,2"
-                        Padding="2"
                         Background="Transparent"
                         CornerRadius="4">
-                        <Grid Margin="0,6,6,6">
+                        <Grid Margin="0,6,0,6">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="3" />
                                 <ColumnDefinition Width="32" />
@@ -31,13 +30,11 @@
                                 </Border.RenderTransform>
                             </Border>
 
-                            <TextBlock
-                                Grid.Column="0"
-                                Grid.ColumnSpan="2"
+                            <ContentPresenter
+                                Grid.Column="1"
                                 HorizontalAlignment="Center"
-                                FontFamily="Segoe FLuent Icons"
-                                FontSize="18"
-                                Text="{TemplateBinding Icon}" />
+                                Content="{TemplateBinding Icon}" />
+
                             <ContentPresenter
                                 Grid.Column="2"
                                 Margin="10,0"

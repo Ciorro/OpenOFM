@@ -26,15 +26,15 @@ namespace OpenOFM.Ui.Controls
             typeof(NavigatedRoutedEventHandler),
             typeof(SidebarItem));
 
-        public string Icon
+        public UIElement Icon
         {
-            get => (string)GetValue(IconProperty);
+            get => (UIElement)GetValue(IconProperty);
             set => SetValue(IconProperty, value);
         }
 
         public static readonly DependencyProperty IconProperty = DependencyProperty.Register(
             "Icon",
-            typeof(string),
+            typeof(UIElement),
             typeof(SidebarItem));
 
 

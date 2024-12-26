@@ -41,31 +41,41 @@
             <controls:SidebarItem
                 Content="Strona główna"
                 GroupName="NavigationGroup"
-                Icon="&#xE80F;"
-                PageKey="Home" />
+                PageKey="Home">
+                <controls:SidebarItem.Icon>
+                    <fi:SymbolIcon FontSize="22" Symbol="Home" />
+                </controls:SidebarItem.Icon>
+            </controls:SidebarItem>
+            
             <controls:SidebarItem
                 Content="Stacje radiowe"
                 GroupName="NavigationGroup"
-                Icon="&#xE90B;"
-                PageKey="RadioStations" />
+                PageKey="RadioStations">
+                <controls:SidebarItem.Icon>
+                    <fi:SymbolIcon FontSize="22" Symbol="MusicNote2" />
+                </controls:SidebarItem.Icon>
+            </controls:SidebarItem>
+            
             <controls:SidebarItem
                 Content="Ulubione"
                 GroupName="NavigationGroup"
-                Icon="&#xEB51;"
-                PageKey="Favorites" />
+                PageKey="Favorites">
+                <controls:SidebarItem.Icon>
+                    <fi:SymbolIcon FontSize="22" Symbol="Heart" />
+                </controls:SidebarItem.Icon>
+            </controls:SidebarItem>
+            
             <controls:Sidebar.Footer>
-                <controls:SidebarItem GroupName="NavigationGroup" PageKey="Player">
-                    <controls:SidebarItem.Template>
-                        <ControlTemplate>
-                            <TextBlock Text="{Binding CurrentPageKey}" />
-                        </ControlTemplate>
-                    </controls:SidebarItem.Template>
                 </controls:SidebarItem>
+                
                 <controls:SidebarItem
                     Content="Ustawienia"
                     GroupName="NavigationGroup"
-                    Icon="&#xE713;"
-                    PageKey="Settings" />
+                    PageKey="Settings">
+                    <controls:SidebarItem.Icon>
+                        <fi:SymbolIcon FontSize="22" Symbol="Settings" />
+                    </controls:SidebarItem.Icon>
+                </controls:SidebarItem>
             </controls:Sidebar.Footer>
         </controls:Sidebar>
 
