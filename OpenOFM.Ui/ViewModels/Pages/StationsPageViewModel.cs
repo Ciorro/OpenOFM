@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Messaging;
 using OpenOFM.Core.Models;
 using OpenOFM.Core.Services;
 using OpenOFM.Core.Stores;
@@ -15,7 +16,6 @@ namespace OpenOFM.Ui.ViewModels.Pages
         private readonly IStationsStore _stations;
         private readonly IPlaylistStore _playlists;
         private readonly IPlayerService _player;
-        private readonly DispatcherTimer _refreshTimer;
 
         [ObservableProperty]
         private List<RadioStationItemViewModel> _radioStations = new();
@@ -26,13 +26,10 @@ namespace OpenOFM.Ui.ViewModels.Pages
             _playlists = playlists;
             _player = player;
 
-            _refreshTimer = new DispatcherTimer();
-            _refreshTimer.Interval = TimeSpan.FromSeconds(15);
-            _refreshTimer.Tick += (_, __) =>
+            WeakReferenceMessenger.Default.Register<PlaylistsUpdatedNotification>(this, (sender, _) =>
             {
                 RefreshPlaylists();
-            };
-            _refreshTimer.Start();
+            });
         }
 
         public override void OnResumed()
@@ -43,14 +40,6 @@ namespace OpenOFM.Ui.ViewModels.Pages
             if (_player.CurrentStation is not null)
             {
                 MarkStation(_player.CurrentStation);
-            }
-        }
-
-        public void Receive(RadioStationChangedMessage message)
-        {
-            foreach (var station in RadioStations!)
-            {
-                station.IsPlaying = station.Id == message.Value.Id;
             }
         }
 
