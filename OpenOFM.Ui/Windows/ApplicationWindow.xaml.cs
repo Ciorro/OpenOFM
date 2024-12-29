@@ -1,5 +1,4 @@
-﻿using OpenOFM.Ui.Controls.Events;
-using System.Windows;
+﻿using System.Windows;
 
 namespace OpenOFM.Ui.Windows
 {
@@ -7,8 +6,8 @@ namespace OpenOFM.Ui.Windows
     {
         public ApplicationWindow()
         {
-            InitializeComponent();
             WindowHelper.ExtendGlassFrame(this);
+            InitializeComponent();
         }
     }
 }
