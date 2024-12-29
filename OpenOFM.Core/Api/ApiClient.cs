@@ -4,7 +4,7 @@ namespace OpenOFM.Core.Api
 {
     public class ApiClient
     {
-        private readonly HttpClient _http;
+        private HttpClient _http;
 
         public ApiClient()
         {
@@ -24,7 +24,13 @@ namespace OpenOFM.Core.Api
             if (response.StatusCode == (HttpStatusCode)449)
             {
                 // Change base address to proxy address.
-                _http.BaseAddress = new Uri("http://oofm.runasp.net/api/");
+                _http = new HttpClient()
+                {
+                    BaseAddress = new Uri("http://oofm.runasp.net/api/")
+                };
+                _http.DefaultRequestHeaders.Add(
+                    "User-Agent", "BULDOZER449");
+
                 return await Get(path, ct);
             }
 
