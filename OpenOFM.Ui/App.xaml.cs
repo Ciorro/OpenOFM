@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using OpenOFM.Core.Services;
+using OpenOFM.Core.Settings;
 using OpenOFM.Core.Stores;
 using OpenOFM.Ui.Extensions;
 using OpenOFM.Ui.Navigation;
@@ -27,14 +28,20 @@ namespace OpenOFM.Ui
                     return new NavigationService((pageKey) => s.GetRequiredKeyedService<IPage>(pageKey));
                 });
 
+                services.AddLocalSettings<AppSettings>("appsettings.json");
+
                 services.AddApi();
                 services.AddPages();
-                services.AddViewModels();
 
                 services.AddSingleton<ApplicationViewModel>();
-                services.AddSingleton<ApplicationWindow>((s) => new ApplicationWindow
+                services.AddSingleton<Window>((s) =>
                 {
-                    DataContext = s.GetRequiredService<ApplicationViewModel>()
+                    var dataContext = s.GetRequiredService<ApplicationViewModel>();
+                    var settings = s.GetRequiredService<ISettingsProvider<AppSettings>>();
+
+                    return IsWindows11OrNewer() ?
+                        new MicaWindow(settings) { DataContext = dataContext } :
+                        new AcrylicWindow(settings) { DataContext = dataContext };
                 });
 
                 services.AddHostedService<PlaylistService>();
@@ -46,7 +53,7 @@ namespace OpenOFM.Ui
         protected override void OnStartup(StartupEventArgs e)
         {
             _appHost.Start();
-            _appHost.Services.GetRequiredService<ApplicationWindow>().Show();
+            _appHost.Services.GetRequiredService<Window>().Show();
 
             base.OnStartup(e);
         }
@@ -55,6 +62,11 @@ namespace OpenOFM.Ui
         {
             _appHost.Dispose();
             base.OnExit(e);
+        }
+
+        private bool IsWindows11OrNewer()
+        {
+            return Environment.OSVersion.Version.Major == 10 && Environment.OSVersion.Version.Build >= 22000;
         }
     }
 

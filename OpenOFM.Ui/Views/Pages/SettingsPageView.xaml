@@ -1,8 +1,84 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:OpenOFM.Ui.Controls"
+    xmlns:converters="clr-namespace:OpenOFM.Ui.Converters"
+    xmlns:fi="clr-namespace:FluentIcons.Wpf;assembly=FluentIcons.Wpf"
     xmlns:pagesVms="clr-namespace:OpenOFM.Ui.ViewModels.Pages">
     <DataTemplate DataType="{x:Type pagesVms:SettingsPageViewModel}">
-        <TextBlock>Home</TextBlock>
+        <DockPanel>
+            <TextBlock
+                Margin="16,0"
+                DockPanel.Dock="Top"
+                Style="{StaticResource TitleTextBlockStyle}">
+                Ustawienia
+            </TextBlock>
+
+            <ScrollViewer Padding="16">
+                <StackPanel>
+                    <GroupBox Padding="0,8" Header="Wygląd">
+                        <controls:SettingsCard Description="Wybierz motyw aplikacji do wyświetlania" Header="Motyw">
+                            <controls:SettingsCard.Icon>
+                                <fi:SymbolIcon FontSize="28" Symbol="Color" />
+                            </controls:SettingsCard.Icon>
+                            <ComboBox SelectedValue="{Binding Theme}" SelectedValuePath="Tag">
+                                <ComboBoxItem Tag="{x:Static ThemeMode.Light}">Jasny</ComboBoxItem>
+                                <ComboBoxItem Tag="{x:Static ThemeMode.Dark}">Ciemny</ComboBoxItem>
+                                <ComboBoxItem Tag="{x:Static ThemeMode.System}">Użyj ustawienia systemu</ComboBoxItem>
+                            </ComboBox>
+                        </controls:SettingsCard>
+                    </GroupBox>
+
+                    <GroupBox Padding="0,8" Header="Informacje">
+                        <Expander>
+                            <Expander.Header>
+                                <StackPanel Orientation="Horizontal">
+                                    <Image
+                                        Width="28"
+                                        Height="28"
+                                        Margin="6,0,16,0"
+                                        Source="/Assets/icon.png" />
+                                    <TextBlock VerticalAlignment="Center" FontWeight="Medium">
+                                        OpenOFM
+                                    </TextBlock>
+                                </StackPanel>
+                            </Expander.Header>
+
+                            <StackPanel>
+                                <GroupBox Header="Informacje">
+                                    <StackPanel>
+                                        <TextBlock Margin="0,2">Open OFM v1.0</TextBlock>
+                                        <TextBlock Margin="0,2">Open OFM nie jest oficjalną aplikacją OpenFM.</TextBlock>
+                                        <TextBlock Margin="0,2">
+                                            <Hyperlink Command="{Binding OpenLinkCommand}" CommandParameter="http://open.fm/">Oficjalna strona OpenFM</Hyperlink>
+                                        </TextBlock>
+                                        <TextBlock Margin="0,2">
+                                            <Hyperlink Command="{Binding OpenLinkCommand}" CommandParameter="https://github.com/Ciorro/OpenOFM">Open OFM source</Hyperlink>
+                                        </TextBlock>
+                                    </StackPanel>
+                                </GroupBox>
+
+                                <GroupBox Margin="0,16" Header="Biblioteki zewnętrzne">
+                                    <StackPanel>
+                                        <TextBlock Margin="0,2">
+                                            <Hyperlink Command="{Binding OpenLinkCommand}" CommandParameter="https://github.com/CommunityToolkit/dotnet">CommunityToolkit.Mvvm</Hyperlink>
+                                        </TextBlock>
+                                        <TextBlock Margin="0,2">
+                                            <Hyperlink Command="{Binding OpenLinkCommand}" CommandParameter="https://github.com/davidxuang/FluentIcons">FluentIcons.Wpf</Hyperlink>
+                                        </TextBlock>
+                                        <TextBlock Margin="0,2">
+                                            <Hyperlink Command="{Binding OpenLinkCommand}" CommandParameter="https://github.com/dotnet/runtime">Microsoft.Extensions</Hyperlink>
+                                        </TextBlock>
+                                        <TextBlock Margin="0,2">
+                                            <Hyperlink Command="{Binding OpenLinkCommand}" CommandParameter="https://github.com/Microsoft/XamlBehaviorsWpf">Microsoft.Xaml.Behaviors.Wpf</Hyperlink>
+                                        </TextBlock>
+                                    </StackPanel>
+                                </GroupBox>
+                            </StackPanel>
+                        </Expander>
+                    </GroupBox>
+                </StackPanel>
+            </ScrollViewer>
+        </DockPanel>
     </DataTemplate>
 </ResourceDictionary>

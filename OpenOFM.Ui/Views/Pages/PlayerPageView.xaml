@@ -34,7 +34,7 @@
                     <TextBlock
                         FontSize="14"
                         FontWeight="Medium"
-                        Foreground="{StaticResource TextFillColorSecondaryBrush}"
+                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                         Text="{Binding CurrentSong.Artist}" />
                     <ToggleButton Margin="0,12" IsChecked="{Binding IsCurrentSongFavorite}">
                         Dodaj do ulubionych

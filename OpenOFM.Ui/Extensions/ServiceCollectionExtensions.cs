@@ -1,9 +1,13 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using OpenOFM.Core.Api;
+using OpenOFM.Core.Services;
+using OpenOFM.Core.Settings;
 using OpenOFM.Ui.Navigation;
 using OpenOFM.Ui.Navigation.Attributes;
 using OpenOFM.Ui.ViewModels;
+using System.IO;
 using System.Reflection;
+using System.Windows;
 
 namespace OpenOFM.Ui.Extensions
 {
@@ -29,9 +33,18 @@ namespace OpenOFM.Ui.Extensions
             }
         }
 
-        public static void AddViewModels(this IServiceCollection services)
+        public static void AddLocalSettings<T>(this IServiceCollection services, string filename)
+            where T : new()
         {
-            //services.AddSingleton<MediaControlsViewModel>();
+            services.AddSingleton<ISettingsProvider<T>, JsonSettingsProvider<T>>(s =>
+            {
+                string appDataDir = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+                string fullPath = Path.Combine(appDataDir, "OpenOFM", filename);
+
+                var settings = new JsonSettingsProvider<T>(fullPath);
+                settings.Load();
+                return settings;
+            });
         }
 
         public static void AddApi(this IServiceCollection services)

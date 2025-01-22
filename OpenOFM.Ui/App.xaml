@@ -8,11 +8,14 @@
             <ResourceDictionary.MergedDictionaries>
                 <!--  Global styles  -->
                 <ResourceDictionary Source="pack://application:,,,/PresentationFramework.Fluent;component/Themes/Fluent.xaml" />
+                <ResourceDictionary Source="/Controls/Styles/GroupBoxStyle.xaml" />
+                <ResourceDictionary Source="/Controls/Styles/HyperlinkStyle.xaml" />
 
                 <!--  Views  -->
                 <ResourceDictionary Source="/Views/Items/RadioStationGridItemView.xaml" />
                 <ResourceDictionary Source="/Views/Items/RadioStationListItemView.xaml" />
 
+                <ResourceDictionary Source="/Views/ApplicationView.xaml" />
                 <ResourceDictionary Source="/Views/Pages/HomePageView.xaml" />
                 <ResourceDictionary Source="/Views/Pages/StationsPageView.xaml" />
                 <ResourceDictionary Source="/Views/Pages/FavoritesPageView.xaml" />
@@ -23,6 +26,7 @@
                 <ResourceDictionary Source="/Controls/Sidebar.xaml" />
                 <ResourceDictionary Source="/Controls/SidebarItem.xaml" />
                 <ResourceDictionary Source="/Controls/MediaControls.xaml" />
+                <ResourceDictionary Source="/Controls/SettingsCard.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>
