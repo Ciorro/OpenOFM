@@ -5,7 +5,6 @@
     xmlns:vm="clr-namespace:OpenOFM.Ui.ViewModels.Items">
     <DataTemplate x:Key="SongListItem" DataType="{x:Type vm:SongItemViewModel}">
         <Border
-            Margin="0,0,0,2"
             Padding="12,8"
             Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
             BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"

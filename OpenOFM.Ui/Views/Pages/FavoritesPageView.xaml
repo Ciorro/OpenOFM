@@ -3,6 +3,44 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:pagesVms="clr-namespace:OpenOFM.Ui.ViewModels.Pages">
     <DataTemplate DataType="{x:Type pagesVms:FavoritesPageViewModel}">
-        <TextBlock>Favorites</TextBlock>
+        <DockPanel>
+            <DockPanel
+                Margin="16,0"
+                DockPanel.Dock="Top"
+                LastChildFill="False">
+                <TextBlock DockPanel.Dock="Left" Style="{StaticResource TitleTextBlockStyle}">
+                    Ulubione
+                </TextBlock>
+
+                <TextBox
+                    MinWidth="200"
+                    VerticalAlignment="Bottom"
+                    DockPanel.Dock="Right"
+                    Text="{Binding SongFilter, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged, Delay=500}" />
+            </DockPanel>
+
+            <ItemsControl
+                Margin="0,16,0,0"
+                ItemTemplate="{StaticResource SongListItem}"
+                ItemsSource="{Binding FavoriteSongs}"
+                VirtualizingPanel.IsContainerVirtualizable="True"
+                VirtualizingPanel.ScrollUnit="Pixel">
+                <ItemsControl.Template>
+                    <ControlTemplate TargetType="ItemsControl">
+                        <ScrollViewer CanContentScroll="True" Focusable="False">
+                            <ItemsPresenter />
+                        </ScrollViewer>
+                    </ControlTemplate>
+                </ItemsControl.Template>
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <VirtualizingStackPanel
+                            Margin="16,0,16,16"
+                            IsVirtualizing="True"
+                            VirtualizationMode="Recycling" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ItemsControl>
+        </DockPanel>
     </DataTemplate>
 </ResourceDictionary>
