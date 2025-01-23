@@ -29,6 +29,7 @@ namespace OpenOFM.Ui
                 });
 
                 services.AddLocalSettings<AppSettings>("appsettings.json");
+                services.AddLocalSettings<Favorites>("favorites.json");
 
                 services.AddApi();
                 services.AddPages();

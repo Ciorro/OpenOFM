@@ -3,6 +3,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="clr-namespace:OpenOFM.Ui.Controls"
     xmlns:converters="clr-namespace:OpenOFM.Ui.Converters"
+    xmlns:fi="clr-namespace:FluentIcons.Wpf;assembly=FluentIcons.Wpf"
     xmlns:pagesVms="clr-namespace:OpenOFM.Ui.ViewModels.Pages">
     <DataTemplate DataType="{x:Type pagesVms:PlayerPageViewModel}">
         <StackPanel Margin="16,0">
@@ -27,54 +28,20 @@
                     </Border.OpacityMask>
                 </Border>
 
-                <StackPanel Grid.Column="1" Margin="16,0,0,0">
-                    <Label FontSize="28" FontWeight="Bold">
-                        <TextBlock Text="{Binding CurrentSong.Title}" TextTrimming="CharacterEllipsis" />
-                    </Label>
-                    <TextBlock
-                        FontSize="14"
-                        FontWeight="Medium"
-                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                        Text="{Binding CurrentSong.Artist}" />
-                    <ToggleButton Margin="0,12" IsChecked="{Binding IsCurrentSongFavorite}">
-                        Dodaj do ulubionych
-                    </ToggleButton>
-                </StackPanel>
+                <ContentControl
+                    Grid.Column="1"
+                    Margin="16,0"
+                    Content="{Binding CurrentSong}"
+                    ContentTemplate="{StaticResource SongPlayerInfo}" />
             </Grid>
 
             <StackPanel>
-                <TextBlock Margin="0,12,0,8" FontWeight="Medium">
-                    Następnie:
-                </TextBlock>
-
-                <ItemsControl ItemsSource="{Binding UpcomingSongs}">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <Border
-                                Margin="0,0,0,2"
-                                Padding="12,8"
-                                Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
-                                BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
-                                BorderThickness="1"
-                                CornerRadius="4">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="*" />
-                                    </Grid.ColumnDefinitions>
-                                    <TextBlock
-                                        Grid.Column="0"
-                                        FontSize="12"
-                                        Text="{Binding Title}" />
-                                    <TextBlock
-                                        Grid.Column="1"
-                                        FontSize="12"
-                                        Text="{Binding Artist}" />
-                                </Grid>
-                            </Border>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
+                <GroupBox
+                    Margin="0,12"
+                    Padding="0,8,0,0"
+                    Header="Następnie:">
+                    <ItemsControl ItemTemplate="{StaticResource SongListItem}" ItemsSource="{Binding UpcomingSongs}" />
+                </GroupBox>
             </StackPanel>
         </StackPanel>
     </DataTemplate>

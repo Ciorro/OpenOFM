@@ -1,0 +1,58 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:fi="clr-namespace:FluentIcons.Wpf;assembly=FluentIcons.Wpf"
+    xmlns:vm="clr-namespace:OpenOFM.Ui.ViewModels.Items">
+    <DataTemplate x:Key="SongPlayerInfo" DataType="{x:Type vm:SongItemViewModel}">
+        <StackPanel>
+            <TextBlock FontSize="28" FontWeight="Bold">
+                <TextBlock Text="{Binding Title}" TextTrimming="CharacterEllipsis" />
+            </TextBlock>
+            <TextBlock
+                FontSize="14"
+                FontWeight="Medium"
+                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                Text="{Binding Artist}" />
+            <ToggleButton Margin="0,12" IsChecked="{Binding IsFavorite}">
+                <ToggleButton.Style>
+                    <Style BasedOn="{StaticResource DefaultToggleButtonStyle}" TargetType="ToggleButton">
+                        <Style.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter Property="Content">
+                                    <Setter.Value>
+                                        <TextBlock>
+                                            <Run>Usuń z ulubionych</Run>
+                                            <InlineUIContainer BaselineAlignment="Center">
+                                                <fi:SymbolIcon
+                                                    HorizontalAlignment="Left"
+                                                    FontSize="14"
+                                                    IconVariant="Filled"
+                                                    Symbol="HeartBroken" />
+                                            </InlineUIContainer>
+                                        </TextBlock>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="False">
+                                <Setter Property="Content">
+                                    <Setter.Value>
+                                        <TextBlock>
+                                            <Run>Dodaj do ulubionych</Run>
+                                            <InlineUIContainer BaselineAlignment="Center">
+                                                <fi:SymbolIcon
+                                                    HorizontalAlignment="Left"
+                                                    FontSize="14"
+                                                    IconVariant="Filled"
+                                                    Symbol="Heart" />
+                                            </InlineUIContainer>
+                                        </TextBlock>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </ToggleButton.Style>
+            </ToggleButton>
+        </StackPanel>
+    </DataTemplate>
+</ResourceDictionary>

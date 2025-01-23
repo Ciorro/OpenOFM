@@ -14,6 +14,8 @@
                 <!--  Views  -->
                 <ResourceDictionary Source="/Views/Items/RadioStationGridItemView.xaml" />
                 <ResourceDictionary Source="/Views/Items/RadioStationListItemView.xaml" />
+                <ResourceDictionary Source="/Views/Items/SongListItemView.xaml" />
+                <ResourceDictionary Source="/Views/Items/SongPlayerInfoView.xaml" />
 
                 <ResourceDictionary Source="/Views/ApplicationView.xaml" />
                 <ResourceDictionary Source="/Views/Pages/HomePageView.xaml" />
