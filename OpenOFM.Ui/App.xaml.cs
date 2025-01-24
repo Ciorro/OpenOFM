@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Hosting;
 using OpenOFM.Core.Services;
 using OpenOFM.Core.Settings;
+using OpenOFM.Core.Settings.Configurations;
 using OpenOFM.Core.Stores;
 using OpenOFM.Ui.Extensions;
 using OpenOFM.Ui.Navigation;
@@ -61,7 +62,10 @@ namespace OpenOFM.Ui
 
         protected override void OnExit(ExitEventArgs e)
         {
+            _appHost.Services.GetRequiredService<ISettingsProvider<AppSettings>>().Save();
+            _appHost.Services.GetRequiredService<ISettingsProvider<Favorites>>().Save();
             _appHost.Dispose();
+
             base.OnExit(e);
         }
 

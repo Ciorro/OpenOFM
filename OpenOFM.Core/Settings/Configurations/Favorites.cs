@@ -1,6 +1,6 @@
 ﻿using OpenOFM.Core.Models;
 
-namespace OpenOFM.Core.Settings
+namespace OpenOFM.Core.Settings.Configurations
 {
     public class Favorites
     {

@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using OpenOFM.Core.Settings;
+using OpenOFM.Core.Settings.Configurations;
 using OpenOFM.Ui.Navigation.Attributes;
 using OpenOFM.Ui.ViewModels.Items;
 using System.ComponentModel;

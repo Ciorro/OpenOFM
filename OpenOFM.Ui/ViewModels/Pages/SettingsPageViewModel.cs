@@ -3,6 +3,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using OpenOFM.Core.Settings;
+using OpenOFM.Core.Settings.Configurations;
 using OpenOFM.Ui.Navigation.Attributes;
 using System.Diagnostics;
 using System.Windows;

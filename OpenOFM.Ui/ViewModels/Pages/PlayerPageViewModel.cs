@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.Messaging;
 using OpenOFM.Core.Models;
 using OpenOFM.Core.Services;
 using OpenOFM.Core.Settings;
+using OpenOFM.Core.Settings.Configurations;
 using OpenOFM.Core.Stores;
 using OpenOFM.Ui.Messages;
 using OpenOFM.Ui.Navigation.Attributes;

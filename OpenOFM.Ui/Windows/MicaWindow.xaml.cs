@@ -1,6 +1,7 @@
 ﻿#pragma warning disable WPF0001
 
 using OpenOFM.Core.Settings;
+using OpenOFM.Core.Settings.Configurations;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;

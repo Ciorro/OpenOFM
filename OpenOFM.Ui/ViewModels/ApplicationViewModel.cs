@@ -2,6 +2,8 @@
 using CommunityToolkit.Mvvm.Input;
 using OpenOFM.Core.Models;
 using OpenOFM.Core.Services;
+using OpenOFM.Core.Settings;
+using OpenOFM.Core.Settings.Configurations;
 using OpenOFM.Ui.Navigation;
 using System.Windows.Threading;
 
@@ -11,7 +13,7 @@ namespace OpenOFM.Ui.ViewModels
     {
         private readonly INavigationService _navigation;
         private readonly IPlayerService _playerService;
-
+        private readonly ISettingsProvider<AppSettings> _settings;
         [ObservableProperty]
         private bool _isPaused;
 
@@ -27,7 +29,7 @@ namespace OpenOFM.Ui.ViewModels
         [ObservableProperty]
         private RadioStation? _currentStation;
 
-        public ApplicationViewModel(INavigationService navigation, IPlayerService playerService)
+        public ApplicationViewModel(INavigationService navigation, IPlayerService playerService, ISettingsProvider<AppSettings> settings)
         {
             _playerService = playerService;
             _playerService.StationChanged += (sender, station) =>
@@ -44,6 +46,10 @@ namespace OpenOFM.Ui.ViewModels
                 OnPropertyChanged(nameof(CurrentPageKey));
             };
             _navigation.Navigate("Home");
+
+            _settings = settings;
+            Volume = _settings.CurrentSettings.Volume;
+            IsMuted = _settings.CurrentSettings.IsMuted;
 
             var delayRefreshTimer = new DispatcherTimer();
             delayRefreshTimer.Interval = TimeSpan.FromSeconds(1);
@@ -91,6 +97,9 @@ namespace OpenOFM.Ui.ViewModels
             {
                 _playerService.Volume = Volume / 100f;
             }
+
+            _settings.CurrentSettings.IsMuted = value;
+            _settings.Save();
         }
 
         partial void OnVolumeChanged(float value)
@@ -99,6 +108,8 @@ namespace OpenOFM.Ui.ViewModels
             {
                 _playerService.Volume = value / 100f;
             }
+
+            _settings.CurrentSettings.Volume = value;
         }
     }
 }
