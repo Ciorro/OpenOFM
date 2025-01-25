@@ -8,6 +8,7 @@ using OpenOFM.Ui.Extensions;
 using OpenOFM.Ui.Navigation;
 using OpenOFM.Ui.Services;
 using OpenOFM.Ui.ViewModels;
+using OpenOFM.Ui.ViewModels.Items;
 using OpenOFM.Ui.Windows;
 using System.Windows;
 
@@ -34,6 +35,8 @@ namespace OpenOFM.Ui
 
                 services.AddApi();
                 services.AddPages();
+
+                services.AddFactory<RadioStationItemViewModel>();
 
                 services.AddSingleton<ApplicationViewModel>();
                 services.AddSingleton<Window>((s) =>

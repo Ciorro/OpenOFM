@@ -2,9 +2,11 @@
 using OpenOFM.Core.Api;
 using OpenOFM.Core.Services;
 using OpenOFM.Core.Settings;
+using OpenOFM.Ui.Factories;
 using OpenOFM.Ui.Navigation;
 using OpenOFM.Ui.Navigation.Attributes;
 using OpenOFM.Ui.ViewModels;
+using OpenOFM.Ui.ViewModels.Items;
 using System.IO;
 using System.Reflection;
 using System.Windows;
@@ -53,6 +55,23 @@ namespace OpenOFM.Ui.Extensions
             services.AddSingleton<StationsApiClient>();
             services.AddSingleton<PlaylistApiClient>();
             services.AddSingleton<TokenApiClient>();
+        }
+
+        public static void AddFactory<TService>(this IServiceCollection services)
+            where TService : class
+        {
+            services.AddTransient<TService>();
+            services.AddSingleton<Func<TService>>(s => () => s.GetRequiredService<TService>());
+            services.AddSingleton<IAbstractFactory<TService>, AbstractFactory<TService>>();
+        }
+
+        public static void AddFactory<TService, TImplementation>(this IServiceCollection services)
+            where TService : class
+            where TImplementation : class, TService
+        {
+            services.AddTransient<TService, TImplementation>();
+            services.AddSingleton<Func<TService>>(s => () => s.GetRequiredService<TService>());
+            services.AddSingleton<IAbstractFactory<TService>, AbstractFactory<TService>>();
         }
     }
 }

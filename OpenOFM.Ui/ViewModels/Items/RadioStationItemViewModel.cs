@@ -1,42 +1,54 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using OpenOFM.Core.Models;
+using OpenOFM.Core.Services;
+using OpenOFM.Core.Stores;
+using OpenOFM.Ui.Messages;
 using System.Text;
+using System.Windows;
 
 namespace OpenOFM.Ui.ViewModels.Items
 {
-    internal partial class RadioStationItemViewModel : ObservableObject
+    internal partial class RadioStationItemViewModel : ObservableObject, IDisposable
     {
-        private readonly RadioStation _radioStation;
+        private readonly IPlaylistStore _playlists;
+        private readonly IPlayerService _player;
 
-        [ObservableProperty]
-        private bool _isPlaying;
+        public RadioStation Station { get; set; } = new();
 
-        [ObservableProperty]
-        [NotifyPropertyChangedFor(nameof(CurrentSong))]
-        private Playlist? _playlist;
-
-        public Action<RadioStation>? OnSelected { get; set; }
-
-        public RadioStationItemViewModel(RadioStation radioStation)
+        public RadioStationItemViewModel(IPlaylistStore playlists, IPlayerService player)
         {
-            _radioStation = radioStation;
+            _playlists = playlists;
+            _player = player;
+            _player.StationChanged += OnStationChanged;
+
+            WeakReferenceMessenger.Default.Register<PlaylistsUpdatedNotification>(this, (sender, _) =>
+            {
+                OnPropertyChanged(nameof(CurrentSong));
+            });
         }
 
         public int Id
-            => _radioStation.Id;
+            => Station.Id;
         public string? Name
-            => _radioStation.Name;
+            => Station.Name;
         public string? CoverUrl
-            => _radioStation.CoverUrl;
+            => Station.CoverUrl;
         public IReadOnlyList<RadioCategory> Categories
-            => _radioStation.Categories;
+            => Station.Categories;
+
+        public bool IsPlaying
+        {
+            get => _player.CurrentStation == Station;
+        }
 
         public string CurrentSong
         {
             get
             {
-                var currentSong = Playlist?.Queue.ElementAtOrDefault(0);
+                var playlist = _playlists.GetPlaylist(Station.Id, DateTime.Now);
+                var currentSong = playlist?.Queue.ElementAtOrDefault(0);
                 var isFullTitle = !string.IsNullOrWhiteSpace(currentSong?.Title) &&
                                   !string.IsNullOrWhiteSpace(currentSong?.Artist);
 
@@ -55,7 +67,17 @@ namespace OpenOFM.Ui.ViewModels.Items
         [RelayCommand]
         private void OnClick()
         {
-            OnSelected?.Invoke(_radioStation);
+            _player.Play(Station);
+        }
+
+        private void OnStationChanged(object sender, RadioStation? station)
+        {
+            OnPropertyChanged(nameof(IsPlaying));
+        }
+
+        public void Dispose()
+        {
+            _player.StationChanged -= OnStationChanged;
         }
     }
 }
