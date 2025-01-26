@@ -6,6 +6,7 @@ using OpenOFM.Core.Settings;
 using OpenOFM.Core.Settings.Configurations;
 using OpenOFM.Ui.Navigation.Attributes;
 using System.Diagnostics;
+using System.IO;
 using System.Windows;
 
 namespace OpenOFM.Ui.ViewModels.Pages
@@ -31,6 +32,18 @@ namespace OpenOFM.Ui.ViewModels.Pages
         public override void OnPaused()
         {
             _settings.Save();
+        }
+
+        [RelayCommand]
+        private void OpenConfigFolder()
+        {
+            string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                "OpenOFM");
+
+            Process.Start(new ProcessStartInfo(path)
+            {
+                UseShellExecute = true
+            });
         }
 
         [RelayCommand]
