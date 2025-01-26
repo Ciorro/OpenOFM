@@ -11,7 +11,7 @@
             HorizontalContentAlignment="Stretch"
             Command="{Binding ClickCommand}"
             SnapsToDevicePixels="False">
-            <Border BorderThickness="2" CornerRadius="3">
+            <Border BorderThickness="0,0,0,2" CornerRadius="3">
                 <Border.Style>
                     <Style TargetType="Border">
                         <Style.Triggers>
