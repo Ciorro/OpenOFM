@@ -1,8 +1,49 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:OpenOFM.Ui.Controls"
     xmlns:pagesVms="clr-namespace:OpenOFM.Ui.ViewModels.Pages">
     <DataTemplate DataType="{x:Type pagesVms:HomePageViewModel}">
-        <TextBlock>Home</TextBlock>
+        <DockPanel>
+            <TextBlock
+                Margin="16,0"
+                DockPanel.Dock="Top"
+                Style="{StaticResource TitleTextBlockStyle}">
+                Strona główna
+            </TextBlock>
+            <ScrollViewer>
+                <StackPanel>
+                    <GroupBox
+                        Margin="16"
+                        Padding="0,8"
+                        Header="Polecane stacje">
+                        <ItemsControl ItemTemplate="{StaticResource RadioStationGridItem}" ItemsSource="{Binding FeaturedStations}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <controls:FlexUniformGrid Margin="-4" MinItemWidth="300" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemContainerStyle>
+                                <Style>
+                                    <Setter Property="FrameworkElement.Margin" Value="4" />
+                                </Style>
+                            </ItemsControl.ItemContainerStyle>
+                        </ItemsControl>
+                    </GroupBox>
+                    <GroupBox
+                        Margin="16,0"
+                        Padding="0,8"
+                        Header="Wybrane dla Ciebie">
+                        <ItemsControl ItemTemplate="{StaticResource RadioStationListItem}" ItemsSource="{Binding RecommendedStations}">
+                            <ItemsControl.ItemContainerStyle>
+                                <Style>
+                                    <Setter Property="FrameworkElement.Margin" Value="0,2" />
+                                </Style>
+                            </ItemsControl.ItemContainerStyle>
+                        </ItemsControl>
+                    </GroupBox>
+                </StackPanel>
+            </ScrollViewer>
+        </DockPanel>
     </DataTemplate>
 </ResourceDictionary>

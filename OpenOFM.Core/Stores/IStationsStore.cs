@@ -6,6 +6,5 @@ namespace OpenOFM.Core.Stores
     {
         void AddStation(RadioStation radioStation);
         IEnumerable<RadioStation> GetAllRadioStations();
-        IEnumerable<RadioStation> GetRadioStationsByCategoryId(int categoryId);
     }
 }

@@ -10,7 +10,7 @@
             HorizontalAlignment="Stretch"
             VerticalAlignment="Stretch"
             HorizontalContentAlignment="Stretch"
-            Command="{Binding PlayCommand}">
+            Command="{Binding ClickCommand}">
             <Grid>
                 <DockPanel>
                     <Border VerticalAlignment="Top">
@@ -49,11 +49,11 @@
                                     <Border
                                         Margin="2"
                                         Padding="2"
-                                        Background="{StaticResource ControlFillColorDefaultBrush}"
+                                        Background="{DynamicResource ControlFillColorDefaultBrush}"
                                         CornerRadius="2">
                                         <TextBlock
                                             FontSize="10"
-                                            Foreground="{StaticResource TextFillColorSecondaryBrush}"
+                                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                                             Text="{Binding Name}" />
                                     </Border>
                                 </DataTemplate>
@@ -65,6 +65,7 @@
                             Text="{Binding CurrentSong}" />
                     </StackPanel>
                 </DockPanel>
+
                 <controls:LiveIndicator
                     HorizontalAlignment="Right"
                     VerticalAlignment="Top"

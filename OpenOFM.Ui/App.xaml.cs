@@ -25,6 +25,8 @@ namespace OpenOFM.Ui
                 services.AddSingleton<IPlayerService, PlayerService>();
                 services.AddSingleton<IPlaylistStore, PlaylistStore>();
                 services.AddSingleton<IStationsStore, StationsStore>();
+                services.AddSingleton<IRecommendationService, RecommendationService>();
+                services.AddSingleton<IFeaturedService, FeaturedService>();
                 services.AddSingleton<INavigationService, NavigationService>((s) =>
                 {
                     return new NavigationService((pageKey) => s.GetRequiredKeyedService<IPage>(pageKey));
