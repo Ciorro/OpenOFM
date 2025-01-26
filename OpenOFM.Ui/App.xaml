@@ -29,6 +29,7 @@
                 <ResourceDictionary Source="/Controls/SidebarItem.xaml" />
                 <ResourceDictionary Source="/Controls/MediaControls.xaml" />
                 <ResourceDictionary Source="/Controls/SettingsCard.xaml" />
+                <ResourceDictionary Source="/Controls/InfoBar.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

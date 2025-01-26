@@ -2,6 +2,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="clr-namespace:OpenOFM.Ui.Controls"
+    xmlns:converter="clr-namespace:OpenOFM.Ui.Converters"
     xmlns:pagesVms="clr-namespace:OpenOFM.Ui.ViewModels.Pages">
     <DataTemplate DataType="{x:Type pagesVms:HomePageViewModel}">
         <DockPanel>
@@ -34,13 +35,20 @@
                         Margin="16,0"
                         Padding="0,8"
                         Header="Wybrane dla Ciebie">
-                        <ItemsControl ItemTemplate="{StaticResource RadioStationListItem}" ItemsSource="{Binding RecommendedStations}">
-                            <ItemsControl.ItemContainerStyle>
-                                <Style>
-                                    <Setter Property="FrameworkElement.Margin" Value="0,2" />
-                                </Style>
-                            </ItemsControl.ItemContainerStyle>
-                        </ItemsControl>
+                        <Grid>
+                            <controls:InfoBar
+                                Title="Nic tu jeszcze nie ma"
+                                IsClosable="False"
+                                IsOpen="{Binding RecommendedStations.Count, Converter={converter:ValueLessThanToBoolConverter}, ConverterParameter=1}"
+                                Message="Dodawaj piosenki do listy ulubionych, abyśmy mogli polecać Ci stacje radiowe." />
+                            <ItemsControl ItemTemplate="{StaticResource RadioStationListItem}" ItemsSource="{Binding RecommendedStations}">
+                                <ItemsControl.ItemContainerStyle>
+                                    <Style>
+                                        <Setter Property="FrameworkElement.Margin" Value="0,2" />
+                                    </Style>
+                                </ItemsControl.ItemContainerStyle>
+                            </ItemsControl>
+                        </Grid>
                     </GroupBox>
                 </StackPanel>
             </ScrollViewer>
