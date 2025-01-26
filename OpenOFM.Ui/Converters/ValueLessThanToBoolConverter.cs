@@ -17,7 +17,7 @@ namespace OpenOFM.Ui.Converters
 
             if (value is IComparable comparable)
             {
-                return comparable.CompareTo(parameter as IComparable) > 0;
+                return comparable.CompareTo(parameter as IComparable) < 0;
             }
 
             return false;

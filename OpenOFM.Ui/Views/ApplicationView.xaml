@@ -30,7 +30,7 @@
                 Title="Open OFM"
                 CurrentPageKey="{Binding CurrentPageKey, Mode=TwoWay}"
                 Icon="/Assets/icon.png"
-                IsExpanded="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Converter={converters:ValueLessThanToBoolConverter}, ConverterParameter=800.0}">
+                IsExpanded="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Converter={converters:ValueGreaterThanToBoolConverter}, ConverterParameter=800.0}">
                 <controls:SidebarItem
                     Content="Strona główna"
                     GroupName="NavigationGroup"
