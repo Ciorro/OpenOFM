@@ -77,6 +77,9 @@
                                                 <Hyperlink Command="{Binding OpenLinkCommand}" CommandParameter="https://github.com/davidxuang/FluentIcons">FluentIcons.Wpf</Hyperlink>
                                             </TextBlock>
                                             <TextBlock Margin="0,2">
+                                                <Hyperlink Command="{Binding OpenLinkCommand}" CommandParameter="https://github.com/floydpink/CachedImage">CachedImage</Hyperlink>
+                                            </TextBlock>
+                                            <TextBlock Margin="0,2">
                                                 <Hyperlink Command="{Binding OpenLinkCommand}" CommandParameter="https://github.com/dotnet/runtime">Microsoft.Extensions</Hyperlink>
                                             </TextBlock>
                                             <TextBlock Margin="0,2">
