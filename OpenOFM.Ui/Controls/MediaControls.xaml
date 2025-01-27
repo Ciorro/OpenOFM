@@ -66,11 +66,13 @@
                         <!--  Playback controls  -->
                         <StackPanel Grid.Column="1" Orientation="Horizontal">
                             <Button
+                                Name="PART_PreviousButton"
                                 Padding="8"
                                 Background="Transparent"
                                 BorderThickness="0">
                                 <fi:SymbolIcon FontSize="16" Symbol="Previous" />
                             </Button>
+
                             <ToggleButton
                                 Margin="5,0"
                                 Padding="12"
@@ -104,9 +106,10 @@
                                         </Style.Triggers>
                                     </Style>
                                 </ToggleButton.Style>
-
                             </ToggleButton>
+
                             <Button
+                                Name="PART_NextButton"
                                 Padding="8"
                                 Background="Transparent"
                                 BorderThickness="0">

@@ -13,6 +13,8 @@ namespace OpenOFM.Core.Services
         RadioStation? CurrentStation { get; }
 
         Task Play(RadioStation radioStation);
+        Task PlayPrevious();
+        Task PlayNext();
         void Stop();
         TimeSpan GetDelay();
     }

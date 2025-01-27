@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace OpenOFM.Ui.Controls
 {
@@ -10,6 +11,49 @@ namespace OpenOFM.Ui.Controls
             DefaultStyleKeyProperty.OverrideMetadata(
                 typeof(MediaControls), new FrameworkPropertyMetadata(typeof(MediaControls)));
         }
+
+        public override void OnApplyTemplate()
+        {
+            var prevButton = GetTemplateChild("PART_PreviousButton");
+            if (prevButton is Button pb)
+            {
+                pb.Click += (_, __) => RaiseEvent(new RoutedEventArgs(PreviousClickedEvent, this));
+            }
+
+            var nextButton = GetTemplateChild("PART_NextButton");
+            if (nextButton is Button nb)
+            {
+                nb.Click += (_, __) => RaiseEvent(new RoutedEventArgs(NextClickedEvent, this));
+            }
+
+            base.OnApplyTemplate();
+        }
+
+        public event RoutedEventHandler PreviousClicked
+        {
+            add => AddHandler(PreviousClickedEvent, value);
+            remove => RemoveHandler(PreviousClickedEvent, value);
+        }
+
+        public static readonly RoutedEvent PreviousClickedEvent = EventManager.RegisterRoutedEvent(
+            "PreviousClicked",
+            RoutingStrategy.Direct,
+            typeof(RoutedEventHandler),
+            typeof(MediaControls));
+
+
+        public event RoutedEventHandler NextClicked
+        {
+            add => AddHandler(NextClickedEvent, value);
+            remove => RemoveHandler(NextClickedEvent, value);
+        }
+
+        public static readonly RoutedEvent NextClickedEvent = EventManager.RegisterRoutedEvent(
+            "NextClicked",
+            RoutingStrategy.Direct,
+            typeof(RoutedEventHandler),
+            typeof(MediaControls));
+
 
         public bool IsPaused
         {

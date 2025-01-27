@@ -1,5 +1,4 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using OpenOFM.Core.Models;
 using OpenOFM.Core.Services;
@@ -17,7 +16,6 @@ namespace OpenOFM.Ui.ViewModels.Pages
     {
         private readonly IPlayerService _playerService;
         private readonly IPlaylistStore _playlistStore;
-        private readonly IStationsStore _stationsStore;
         private readonly ISettingsProvider<Favorites> _favorites;
 
         private SongItemViewModel[] _playlist = [];
@@ -26,16 +24,22 @@ namespace OpenOFM.Ui.ViewModels.Pages
         private RadioStation? _currentStation;
 
         public PlayerPageViewModel(
-            IPlayerService playerService, 
-            IPlaylistStore playlistStore, 
-            IStationsStore stationsStore,
+            IPlayerService playerService,
+            IPlaylistStore playlistStore,
             ISettingsProvider<Favorites> favorites)
         {
-            _playerService = playerService;
-            _playlistStore = playlistStore;
-            _stationsStore = stationsStore;
             _favorites = favorites;
-            
+            _playlistStore = playlistStore;
+            _playerService = playerService;
+            _playerService.StationChanged += (sender, station) =>
+            {
+                if (station is not null)
+                {
+                    UpdateStation();
+                    UpdatePlaylist();
+                }
+            };
+
             WeakReferenceMessenger.Default.Register<PlaylistsUpdatedNotification>(this, (sender, _) =>
             {
                 UpdatePlaylist();
@@ -82,14 +86,6 @@ namespace OpenOFM.Ui.ViewModels.Pages
         private void UpdateStation()
         {
             CurrentStation = _playerService?.CurrentStation;
-
-            //if (CurrentStation is not null)
-            //{
-            //    RecommendedStations = CurrentStation.Categories
-            //        .SelectMany(x => _stationsStore.GetRadioStationsByCategoryId(x.Id))
-            //        .Select(x => new RadioStationItemViewModel(x))
-            //        .ToArray();
-            //}
         }
 
         private void OnIsFavoriteChanged(SongItemViewModel sender, bool isFavorite)

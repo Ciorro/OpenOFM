@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using OpenOFM.Core.Collections;
 using OpenOFM.Core.Models;
 using OpenOFM.Core.Services;
 using OpenOFM.Core.Settings;
@@ -14,6 +15,7 @@ namespace OpenOFM.Ui.ViewModels
         private readonly INavigationService _navigation;
         private readonly IPlayerService _playerService;
         private readonly ISettingsProvider<AppSettings> _settings;
+
         [ObservableProperty]
         private bool _isPaused;
 
@@ -81,6 +83,18 @@ namespace OpenOFM.Ui.ViewModels
         [RelayCommand]
         private void NavigateForward()
             => _navigation.Forward();
+
+        [RelayCommand]
+        private async Task PreviousStation()
+        {
+            await _playerService.PlayPrevious();
+        }
+
+        [RelayCommand]
+        private async Task NextStation()
+        {
+            await _playerService.PlayNext();
+        }
 
         partial void OnIsPausedChanged(bool value)
         {

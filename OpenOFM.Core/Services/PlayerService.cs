@@ -1,4 +1,5 @@
 ﻿using OpenOFM.Core.Api;
+using OpenOFM.Core.Collections;
 using OpenOFM.Core.Models;
 using OpenOFM.Core.Streaming.Playback;
 
@@ -10,6 +11,7 @@ namespace OpenOFM.Core.Services
 
         private readonly TokenApiClient _tokenApi;
         private readonly HttpClient _httpClient;
+        private readonly HistoryCollection<RadioStation> _history = new();
 
         private Player? _player;
         private RadioStation? _currentStation;
@@ -56,19 +58,24 @@ namespace OpenOFM.Core.Services
 
         public async Task Play(RadioStation radioStation)
         {
-            var streamUrl = await _tokenApi.AppendToken(radioStation.StreamUrl!);
+            await PlayInternal(radioStation);
+            _history.Push(radioStation);
+        }
 
-            if (_player is not null)
+        public async Task PlayPrevious()
+        {
+            if (_history.TryBack(out var station))
             {
-                Stop();
+                await PlayInternal(station);
             }
+        }
 
-            _player = new Player(new Uri(streamUrl), _httpClient);
-            _player.Play();
-            _player.Volume = Volume;
-
-            _currentStation = radioStation;
-            StationChanged?.Invoke(this, radioStation);
+        public async Task PlayNext()
+        {
+            if (_history.TryForward(out var station))
+            {
+                await PlayInternal(station);
+            }
         }
 
         public void Stop()
@@ -84,6 +91,23 @@ namespace OpenOFM.Core.Services
         public TimeSpan GetDelay()
         {
             return _player?.Delay ?? TimeSpan.Zero;
+        }
+
+        private async Task PlayInternal(RadioStation radioStation)
+        {
+            var streamUrl = await _tokenApi.AppendToken(radioStation.StreamUrl!);
+
+            if (_player is not null)
+            {
+                Stop();
+            }
+
+            _player = new Player(new Uri(streamUrl), _httpClient);
+            _player.Play();
+            _player.Volume = Volume;
+
+            _currentStation = radioStation;
+            StationChanged?.Invoke(this, radioStation);
         }
     }
 }
