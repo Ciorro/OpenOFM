@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using OpenOFM.Core.Api;
 using OpenOFM.Core.Services;
 using OpenOFM.Core.Settings;
 using OpenOFM.Core.Settings.Configurations;
@@ -52,13 +53,16 @@ namespace OpenOFM.Ui
                 });
 
                 services.AddHostedService<PlaylistService>();
-                services.AddHostedService<StationsService>();
 
             }).Build();
         }
 
-        protected override void OnStartup(StartupEventArgs e)
+        protected override async void OnStartup(StartupEventArgs e)
         {
+            //TODO: Async radio station providers and loading indicators.
+            await LoadRadioStations();
+            await LoadPlaylists();
+
             _appHost.Start();
             _appHost.Services.GetRequiredService<Window>().Show();
 
@@ -77,6 +81,48 @@ namespace OpenOFM.Ui
         private bool IsWindows11OrNewer()
         {
             return Environment.OSVersion.Version.Major == 10 && Environment.OSVersion.Version.Build >= 22000;
+        }
+
+        private async Task LoadRadioStations()
+        {
+            var stationsStore = _appHost.Services.GetRequiredService<IStationsStore>();
+            var stationsApi = _appHost.Services.GetRequiredService<StationsApiClient>();
+
+            try
+            {
+                var stations = await stationsApi.GetRadioStations();
+
+                foreach (var station in stations)
+                {
+                    stationsStore.AddStation(station);
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(
+                    "Nie udało się załadować stacji radiowych.",
+                    "Błąd",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+                Application.Current.Shutdown();
+            }
+        }
+
+        private async Task LoadPlaylists()
+        {
+            var playlistStore = _appHost.Services.GetRequiredService<IPlaylistStore>();
+            var playlistApi = _appHost.Services.GetRequiredService<PlaylistApiClient>();
+
+            try
+            {
+                var playlists = await playlistApi.GetPlaylists();
+
+                foreach (var playlist in playlists)
+                {
+                    playlistStore.AddPlaylist(playlist);
+                }
+            }
+            catch { }
         }
     }
 
