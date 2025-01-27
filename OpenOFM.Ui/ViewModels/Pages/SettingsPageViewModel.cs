@@ -59,6 +59,7 @@ namespace OpenOFM.Ui.ViewModels.Pages
         {
             Application.Current.ThemeMode = value;
             _settings.CurrentSettings.ThemeMode = value.ToString();
+            _settings.Save();
         }
     }
 }

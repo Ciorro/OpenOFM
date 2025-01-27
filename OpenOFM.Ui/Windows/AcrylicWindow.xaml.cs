@@ -16,16 +16,22 @@ namespace OpenOFM.Ui.Windows
     {
         public AcrylicWindow(ISettingsProvider<AppSettings> settings)
         {
-            InitializeComponent();
-            ExtendGlassFrame();
-
             Application.Current.ThemeMode = new ThemeMode(settings.CurrentSettings.ThemeMode);
+
+            InitializeComponent();
+
+            nint hWnd = new WindowInteropHelper(this).EnsureHandle();
+            ExtendGlassFrame(hWnd);
+            SetWindowTheme(hWnd);
+
+            settings.SettingsSaved += () =>
+            {
+                SetWindowTheme(hWnd);
+            };
         }
 
-        private void ExtendGlassFrame()
+        private void ExtendGlassFrame(nint hWnd)
         {
-            nint hWnd = new WindowInteropHelper(this).EnsureHandle();
-
             if (FindName("PART_ContentWrapper") is null)
             {
                 var contentWrapper = new ContentControl();
@@ -47,7 +53,10 @@ namespace OpenOFM.Ui.Windows
                 GlassFrameThickness = new Thickness(-1),
                 NonClientFrameEdges = NonClientFrameEdges.None
             });
+        }
 
+        private void SetWindowTheme(nint hWnd)
+        {
             bool isLigthTheme = IsLigthTheme();
 
             var accentPolicy = new ACCENTPOLICY()

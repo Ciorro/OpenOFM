@@ -6,6 +6,9 @@ namespace OpenOFM.Core.Settings
         where T : new()
     {
         private readonly string _path;
+
+
+        public event Action? SettingsSaved;
         public T CurrentSettings { get; private set; } = new();
 
         public JsonSettingsProvider(string path)
@@ -34,6 +37,7 @@ namespace OpenOFM.Core.Settings
             {
                 jsonStream.SetLength(0);
                 JsonSerializer.Serialize(jsonStream, CurrentSettings);
+                SettingsSaved?.Invoke();
             }
         }
 
