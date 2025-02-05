@@ -62,7 +62,7 @@
                     <controls:SidebarItem
                         GroupName="NavigationGroup"
                         PageKey="Player"
-                        Visibility="{Binding CurrentStation, Converter={converters:ValueNotNullToVisibilityConverter}}">
+                        Visibility="{Binding CurrentStation, Converter={converters:ValueNotEqualsToVisibilityConverter}}">
                         <controls:SidebarItem.Resources>
                             <Brush x:Key="AccentFillColorDefaultBrush">Transparent</Brush>
                         </controls:SidebarItem.Resources>
@@ -128,7 +128,7 @@
                     Background="{DynamicResource LayerFillColorDefaultBrush}"
                     BorderBrush="{DynamicResource ControlElevationBorderBrush}"
                     BorderThickness="0,1,0,0"
-                    Visibility="{Binding CurrentStation, Converter={converters:ValueNotNullToVisibilityConverter}}">
+                    Visibility="{Binding CurrentStation, Converter={converters:ValueNotEqualsToVisibilityConverter}}">
                     <controls:MediaControls
                         Delay="{Binding Delay}"
                         IsMuted="{Binding IsMuted}"

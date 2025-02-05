@@ -1,25 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Markup;
 
 namespace OpenOFM.Ui.Converters
 {
-    class ValueNotNullToVisibilityConverter : MarkupExtension, IValueConverter
+    class ValueNotEqualsToVisibilityConverter : MarkupExtension, IValueConverter
     {
         public override object ProvideValue(IServiceProvider serviceProvider)
         {
-            return new ValueNotNullToVisibilityConverter();
+            return new ValueNotEqualsToVisibilityConverter();
         }
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return value is not null ?
+            if (parameter is null)
+            {
+                return value is not null ?
+                    Visibility.Visible :
+                    Visibility.Collapsed;
+            }
+
+            parameter = System.Convert.ChangeType(parameter, value.GetType(), CultureInfo.InvariantCulture);
+
+            return !value.Equals(parameter) ?
                 Visibility.Visible :
                 Visibility.Collapsed;
         }

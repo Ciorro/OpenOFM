@@ -2,7 +2,9 @@
     x:Class="OpenOFM.Ui.Windows.MicaWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converter="clr-namespace:OpenOFM.Ui.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
     xmlns:local="clr-namespace:OpenOFM.Ui.Windows"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="Open OFM"
@@ -12,5 +14,61 @@
     MinHeight="350"
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
+
+    <Window.TaskbarItemInfo>
+        <TaskbarItemInfo>
+            <TaskbarItemInfo.ThumbButtonInfos>
+                <ThumbButtonInfo
+                    Command="{Binding PreviousStationCommand}"
+                    Description="Poprzednia stacja"
+                    ImageSource="/Assets/previous.png"
+                    Visibility="{Binding CurrentStation, Converter={converter:ValueNotEqualsToVisibilityConverter}}" />
+                <ThumbButtonInfo Description="Odtwarzaj" ImageSource="/Assets/play.png">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click">
+                            <i:ChangePropertyAction
+                                PropertyName="IsPaused"
+                                TargetObject="{Binding}"
+                                Value="False" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                    <ThumbButtonInfo.Visibility>
+                        <MultiBinding Converter="{converter:AllValuesEqualToVisibilityConverter}" ConverterParameter="{x:Static Visibility.Visible}">
+                            <Binding
+                                Converter="{converter:ValueEqualsToVisibilityConverter}"
+                                ConverterParameter="True"
+                                Path="IsPaused" />
+                            <Binding Converter="{converter:ValueNotEqualsToVisibilityConverter}" Path="CurrentStation" />
+                        </MultiBinding>
+                    </ThumbButtonInfo.Visibility>
+                </ThumbButtonInfo>
+                <ThumbButtonInfo Description="Zatrzymaj" ImageSource="/Assets/pause.png">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click">
+                            <i:ChangePropertyAction
+                                PropertyName="IsPaused"
+                                TargetObject="{Binding}"
+                                Value="True" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                    <ThumbButtonInfo.Visibility>
+                        <MultiBinding Converter="{converter:AllValuesEqualToVisibilityConverter}" ConverterParameter="{x:Static Visibility.Visible}">
+                            <Binding
+                                Converter="{converter:ValueEqualsToVisibilityConverter}"
+                                ConverterParameter="False"
+                                Path="IsPaused" />
+                            <Binding Converter="{converter:ValueNotEqualsToVisibilityConverter}" Path="CurrentStation" />
+                        </MultiBinding>
+                    </ThumbButtonInfo.Visibility>
+                </ThumbButtonInfo>
+                <ThumbButtonInfo
+                    Command="{Binding NextStationCommand}"
+                    Description="Następna stacja"
+                    ImageSource="/Assets/next.png"
+                    Visibility="{Binding CurrentStation, Converter={converter:ValueNotEqualsToVisibilityConverter}}" />
+            </TaskbarItemInfo.ThumbButtonInfos>
+        </TaskbarItemInfo>
+    </Window.TaskbarItemInfo>
+
     <ContentControl Content="{Binding}" />
 </Window>
