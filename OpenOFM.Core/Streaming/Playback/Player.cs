@@ -6,6 +6,7 @@ namespace OpenOFM.Core.Streaming.Playback
     public class Player : IDisposable
     {
         private readonly StreamingPipeline _pipeline;
+        private readonly TimeSpan _maxDelay;
 
         private CancellationTokenSource? _cts;
         private Task? _processingLoopTask;
@@ -13,12 +14,13 @@ namespace OpenOFM.Core.Streaming.Playback
         private TimeSpan _delay;
         private DateTime _pauseStartedAt;
 
-        public Player(Uri streamUrl, HttpClient httpClient)
+        public Player(Uri streamUrl, HttpClient httpClient, TimeSpan maxDelay)
         {
             _pipeline = new StreamingPipeline(new M3UWebSource(streamUrl, httpClient), new OpenALSink())
                 .AddMiddleware(new ChunkDownloaderMiddleware(httpClient))
-                .AddMiddleware(new MemoryRecorderMiddleware(TimeSpan.FromHours(1)))
+                .AddMiddleware(new MemoryRecorderMiddleware(maxDelay))
                 .AddMiddleware(new FFmpegDecoderMiddleware("ffmpeg"));
+            _maxDelay = maxDelay; 
         }
 
         private bool _isPaused;
@@ -54,7 +56,13 @@ namespace OpenOFM.Core.Streaming.Playback
 
         public TimeSpan Delay
         {
-            get => _delay + (IsPaused ? DateTime.Now - _pauseStartedAt : TimeSpan.Zero);
+            get
+            {
+                var actualDelay = _delay + (IsPaused ? DateTime.Now - _pauseStartedAt : TimeSpan.Zero);
+
+                return actualDelay < _maxDelay ?
+                    actualDelay : _maxDelay;
+            }
         }
 
         public void Play()

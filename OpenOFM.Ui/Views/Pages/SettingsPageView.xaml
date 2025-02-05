@@ -1,6 +1,7 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:behavior="clr-namespace:OpenOFM.Ui.Controls.Behaviors"
     xmlns:controls="clr-namespace:OpenOFM.Ui.Controls"
     xmlns:converters="clr-namespace:OpenOFM.Ui.Converters"
     xmlns:fi="clr-namespace:FluentIcons.Wpf;assembly=FluentIcons.Wpf"
@@ -26,6 +27,21 @@
                                 <ComboBoxItem Tag="{x:Static ThemeMode.Dark}">Ciemny</ComboBoxItem>
                                 <ComboBoxItem Tag="{x:Static ThemeMode.System}">Użyj ustawienia systemu</ComboBoxItem>
                             </ComboBox>
+                        </controls:SettingsCard>
+                    </GroupBox>
+
+                    <GroupBox Padding="0,8" Header="Zachowanie">
+                        <controls:SettingsCard Description="Określ maksymalne opóźnienie transmisji" Header="Maksymalna długość pauzy">
+                            <controls:SettingsCard.Icon>
+                                <fi:SymbolIcon FontSize="28" Symbol="Clock" />
+                            </controls:SettingsCard.Icon>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBox
+                                    Width="100"
+                                    behavior:TextBoxBehaviors.IsNumeric="True"
+                                    Text="{Binding MaxDelay}" />
+                                <TextBlock Margin="8,0" VerticalAlignment="Center">godz.</TextBlock>
+                            </StackPanel>
                         </controls:SettingsCard>
                     </GroupBox>
 

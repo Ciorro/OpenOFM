@@ -1,6 +1,5 @@
 ﻿#pragma warning disable WPF0001
 
-using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using OpenOFM.Core.Settings;
 using OpenOFM.Core.Settings.Configurations;
@@ -16,17 +15,33 @@ namespace OpenOFM.Ui.ViewModels.Pages
     {
         private readonly ISettingsProvider<AppSettings> _settings;
 
-        [ObservableProperty]
-        private ThemeMode _theme = ThemeMode.System;
-
         public SettingsPageViewModel(ISettingsProvider<AppSettings> settings)
         {
             _settings = settings;
         }
 
-        public override void OnResumed()
+        public ThemeMode Theme
         {
-            Theme = new ThemeMode(_settings.CurrentSettings.ThemeMode);
+            get => new ThemeMode(_settings.CurrentSettings.ThemeMode);
+            set
+            {
+                Application.Current.ThemeMode = value;
+                _settings.CurrentSettings.ThemeMode = value.ToString();
+                _settings.Save();
+            }
+        }
+
+        public uint MaxDelay
+        {
+            get => (uint)_settings.CurrentSettings.MaxDelay.TotalHours;
+            set
+            {
+                if (value > 0 && value <= 24)
+                {
+                    _settings.CurrentSettings.MaxDelay = TimeSpan.FromHours(value);
+                    _settings.Save();
+                }
+            }
         }
 
         public override void OnPaused()
@@ -53,13 +68,6 @@ namespace OpenOFM.Ui.ViewModels.Pages
             {
                 UseShellExecute = true
             });
-        }
-
-        partial void OnThemeChanged(ThemeMode value)
-        {
-            Application.Current.ThemeMode = value;
-            _settings.CurrentSettings.ThemeMode = value.ToString();
-            _settings.Save();
         }
     }
 }

@@ -1,6 +1,8 @@
 ﻿using OpenOFM.Core.Api;
 using OpenOFM.Core.Collections;
 using OpenOFM.Core.Models;
+using OpenOFM.Core.Settings;
+using OpenOFM.Core.Settings.Configurations;
 using OpenOFM.Core.Streaming.Playback;
 
 namespace OpenOFM.Core.Services
@@ -9,6 +11,7 @@ namespace OpenOFM.Core.Services
     {
         public event StationChangedEventHandler? StationChanged;
 
+        private readonly ISettingsProvider<AppSettings> _settings;
         private readonly TokenApiClient _tokenApi;
         private readonly HttpClient _httpClient;
         private readonly HistoryCollection<RadioStation> _history = new();
@@ -16,8 +19,9 @@ namespace OpenOFM.Core.Services
         private Player? _player;
         private RadioStation? _currentStation;
 
-        public PlayerService(TokenApiClient tokenApi)
+        public PlayerService(ISettingsProvider<AppSettings> settings, TokenApiClient tokenApi)
         {
+            _settings = settings;
             _tokenApi = tokenApi;
 
             _httpClient = new HttpClient();
@@ -102,7 +106,7 @@ namespace OpenOFM.Core.Services
                 Stop();
             }
 
-            _player = new Player(new Uri(streamUrl), _httpClient);
+            _player = new Player(new Uri(streamUrl), _httpClient, _settings.CurrentSettings.MaxDelay);
             _player.Play();
             _player.Volume = Volume;
 
