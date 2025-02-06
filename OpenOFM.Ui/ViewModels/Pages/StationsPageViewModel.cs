@@ -38,6 +38,7 @@ namespace OpenOFM.Ui.ViewModels.Pages
             }
 
             RadioStations = _stations.GetAllRadioStations()
+                .OrderBy(x => x.Name)
                 .Select(x =>
                 {
                     var item = _radioItemFactory.Create();
