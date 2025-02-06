@@ -6,6 +6,7 @@ using OpenOFM.Core.Settings;
 using OpenOFM.Core.Settings.Configurations;
 using OpenOFM.Core.Stores;
 using OpenOFM.Ui.Extensions;
+using OpenOFM.Ui.Input;
 using OpenOFM.Ui.Navigation;
 using OpenOFM.Ui.Services;
 using OpenOFM.Ui.ViewModels;
@@ -59,6 +60,8 @@ namespace OpenOFM.Ui
 
         protected override async void OnStartup(StartupEventArgs e)
         {
+            KeyboardListener.Start();
+
             //TODO: Async radio station providers and loading indicators.
             await LoadRadioStations();
             await LoadPlaylists();
@@ -74,6 +77,8 @@ namespace OpenOFM.Ui
             _appHost.Services.GetRequiredService<ISettingsProvider<AppSettings>>().Save();
             _appHost.Services.GetRequiredService<ISettingsProvider<Favorites>>().Save();
             _appHost.Dispose();
+
+            KeyboardListener.Stop();
 
             base.OnExit(e);
         }

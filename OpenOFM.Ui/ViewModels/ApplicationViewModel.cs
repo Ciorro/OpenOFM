@@ -5,7 +5,9 @@ using OpenOFM.Core.Models;
 using OpenOFM.Core.Services;
 using OpenOFM.Core.Settings;
 using OpenOFM.Core.Settings.Configurations;
+using OpenOFM.Ui.Input;
 using OpenOFM.Ui.Navigation;
+using System.Windows.Input;
 using System.Windows.Threading;
 
 namespace OpenOFM.Ui.ViewModels
@@ -60,6 +62,22 @@ namespace OpenOFM.Ui.ViewModels
                 Delay = _playerService.GetDelay();
             };
             delayRefreshTimer.Start();
+
+            KeyboardListener.KeyPressed += (key) =>
+            {
+                switch (key)
+                {
+                    case Key.MediaPlayPause:
+                        IsPaused = !IsPaused;
+                        break;
+                    case Key.MediaPreviousTrack:
+                        PreviousStation();
+                        break;
+                    case Key.MediaNextTrack:
+                        NextStation();
+                        break;
+                }
+            };
         }
 
         public IPage? CurrentPage

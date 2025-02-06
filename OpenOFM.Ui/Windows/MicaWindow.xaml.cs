@@ -7,8 +7,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Interop;
 using System.Windows.Shell;
-
-using static OpenOFM.Ui.Native;
+using static OpenOFM.Ui.Native.NativeConstants;
+using static OpenOFM.Ui.Native.NativeMethods;
 
 namespace OpenOFM.Ui.Windows
 {
