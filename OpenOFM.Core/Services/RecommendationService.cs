@@ -20,11 +20,26 @@ namespace OpenOFM.Core.Services
 
         public IEnumerable<RadioStation> GetRecommendedStations()
         {
-            return _stations.GetAllRadioStations().Where(station =>
+            return _stations.GetAllRadioStations()
+                .Select(station => (station, score: GetStationScore(_playlists.GetPlaylist(station.Id, DateTime.Now))))
+                .OrderByDescending(x => x.score)
+                .TakeWhile(x => x.score > 0)
+                .Select(x => x.station).ToList();
+        }
+
+        private int GetStationScore(Playlist? playlist)
+        {
+            int score = 0;
+
+            for (int i = 0; i < playlist?.Queue.Count; i++)
             {
-                var playlist = _playlists.GetPlaylist(station.Id, DateTime.Now);
-                return _favorites.CurrentSettings.FavoriteSongs.Overlaps(playlist?.Queue ?? []);
-            }).ToList();
+                if (_favorites.CurrentSettings.FavoriteSongs.Contains(playlist.Queue[i]))
+                {
+                    score += playlist.Queue.Count - i;
+                }
+            }
+
+            return score;
         }
     }
 }
