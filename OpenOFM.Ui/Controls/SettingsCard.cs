@@ -18,8 +18,8 @@ namespace OpenOFM.Ui.Controls
         }
 
         public static readonly DependencyProperty DescriptionProperty = DependencyProperty.Register(
-            "Description", 
-            typeof(string), 
+            "Description",
+            typeof(string),
             typeof(SettingsCard));
 
 
@@ -30,8 +30,8 @@ namespace OpenOFM.Ui.Controls
         }
 
         public static readonly DependencyProperty IconProperty = DependencyProperty.Register(
-            "Icon", 
-            typeof(UIElement), 
+            "Icon",
+            typeof(UIElement),
             typeof(SettingsCard));
     }
 }

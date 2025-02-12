@@ -13,33 +13,20 @@
                 Stacje radiowe
             </TextBlock>
 
-            <ItemsControl
+            <ListView
                 Margin="0,16,0,0"
+                Padding="8,0,16,16"
                 ItemTemplate="{StaticResource RadioStationListItem}"
                 ItemsSource="{Binding RadioStations}"
-                VirtualizingPanel.IsContainerVirtualizable="True"
+                SelectedItem="{Binding SelectedStation}"
+                SelectionMode="Single"
                 VirtualizingPanel.ScrollUnit="Pixel">
-                <ItemsControl.ItemContainerStyle>
-                    <Style>
-                        <Setter Property="FrameworkElement.Margin" Value="0,2" />
+                <ListView.ItemContainerStyle>
+                    <Style BasedOn="{StaticResource DefaultListViewItemStyle}" TargetType="ListViewItem">
+                        <Setter Property="Padding" Value="8,0,0,0" />
                     </Style>
-                </ItemsControl.ItemContainerStyle>
-                <ItemsControl.Template>
-                    <ControlTemplate TargetType="ItemsControl">
-                        <ScrollViewer CanContentScroll="True" Focusable="False">
-                            <ItemsPresenter />
-                        </ScrollViewer>
-                    </ControlTemplate>
-                </ItemsControl.Template>
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <VirtualizingStackPanel
-                            Margin="16,0,16,16"
-                            IsVirtualizing="True"
-                            VirtualizationMode="Recycling" />
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-            </ItemsControl>
+                </ListView.ItemContainerStyle>
+            </ListView>
         </DockPanel>
     </DataTemplate>
 </ResourceDictionary>

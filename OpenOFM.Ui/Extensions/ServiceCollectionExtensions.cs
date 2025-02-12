@@ -1,15 +1,12 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using OpenOFM.Core.Api;
-using OpenOFM.Core.Services;
+using OpenOFM.Core.Services.Stations;
 using OpenOFM.Core.Settings;
 using OpenOFM.Ui.Factories;
 using OpenOFM.Ui.Navigation;
 using OpenOFM.Ui.Navigation.Attributes;
-using OpenOFM.Ui.ViewModels;
-using OpenOFM.Ui.ViewModels.Items;
 using System.IO;
 using System.Reflection;
-using System.Windows;
 
 namespace OpenOFM.Ui.Extensions
 {
@@ -72,6 +69,16 @@ namespace OpenOFM.Ui.Extensions
             services.AddTransient<TService, TImplementation>();
             services.AddSingleton<Func<TService>>(s => () => s.GetRequiredService<TService>());
             services.AddSingleton<IAbstractFactory<TService>, AbstractFactory<TService>>();
+        }
+
+        public static void AddStationsProviderChain(this IServiceCollection services, StationProviderKey key, params Type[] implementationTypes)
+        {
+            if (!implementationTypes.All(x => x.IsAssignableTo(typeof(IStationsProvider))))
+            {
+                throw new ArgumentException($"All implementation types must be assignable to {nameof(IStationsProvider)}");
+            }
+
+
         }
     }
 }

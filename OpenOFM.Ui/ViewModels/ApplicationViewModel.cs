@@ -1,11 +1,11 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using OpenOFM.Core.Collections;
 using OpenOFM.Core.Models;
-using OpenOFM.Core.Services;
+using OpenOFM.Core.Services.Player;
 using OpenOFM.Core.Settings;
 using OpenOFM.Core.Settings.Configurations;
 using OpenOFM.Ui.Input;
+using OpenOFM.Ui.Messages;
 using OpenOFM.Ui.Navigation;
 using System.Windows.Input;
 using System.Windows.Threading;
@@ -142,6 +142,22 @@ namespace OpenOFM.Ui.ViewModels
             }
 
             _settings.CurrentSettings.Volume = value;
+        }
+
+        public async void Receive(RadioStationChangedMessage message)
+        {
+            if (message.Value is not null)
+            {
+                try
+                {
+                    await _playerService.Play(message.Value);
+                }
+                catch { }
+            }
+            else
+            {
+                _playerService.Stop();
+            }
         }
     }
 }

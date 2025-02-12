@@ -5,66 +5,47 @@
     xmlns:controls="clr-namespace:OpenOFM.Ui.Controls"
     xmlns:converters="clr-namespace:OpenOFM.Ui.Converters">
     <DataTemplate x:Key="RadioStationListItem">
-        <Button
-            Padding="0"
-            HorizontalAlignment="Stretch"
-            HorizontalContentAlignment="Stretch"
-            Command="{Binding ClickCommand}"
-            SnapsToDevicePixels="False">
-            <Border BorderThickness="0,0,0,2" CornerRadius="3">
-                <Border.Style>
-                    <Style TargetType="Border">
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding IsPlaying}" Value="True">
-                                <Setter Property="BorderBrush" Value="{StaticResource AccentFillColorDefaultBrush}" />
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </Border.Style>
+        <Grid SnapsToDevicePixels="True">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="2*" />
+            </Grid.ColumnDefinitions>
 
-                <Grid SnapsToDevicePixels="True">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="2*" />
-                    </Grid.ColumnDefinitions>
-
-                    <Border Grid.Column="0">
-                        <Image
-                            Width="32"
-                            Height="32"
-                            RenderOptions.BitmapScalingMode="Fant"
-                            Source="{Binding CoverUrl}" />
-                        <Border.OpacityMask>
-                            <VisualBrush>
-                                <VisualBrush.Visual>
-                                    <Border
-                                        Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=Border}}"
-                                        Height="{Binding ActualHeight, RelativeSource={RelativeSource AncestorType=Border}}"
-                                        Background="White"
-                                        CornerRadius="2" />
-                                </VisualBrush.Visual>
-                            </VisualBrush>
-                        </Border.OpacityMask>
-                    </Border>
-
-                    <TextBlock
-                        Grid.Column="1"
-                        Margin="10,0"
-                        VerticalAlignment="Center"
-                        FontSize="12"
-                        FontWeight="Medium"
-                        Text="{Binding Name}"
-                        TextTrimming="CharacterEllipsis" />
-
-                    <TextBlock
-                        Grid.Column="2"
-                        VerticalAlignment="Center"
-                        FontSize="12"
-                        Text="{Binding CurrentSong}"
-                        TextTrimming="CharacterEllipsis" />
-                </Grid>
+            <Border Grid.Column="0">
+                <Image
+                    Width="32"
+                    Height="32"
+                    RenderOptions.BitmapScalingMode="Fant"
+                    Source="{Binding CoverUrl}" />
+                <Border.OpacityMask>
+                    <VisualBrush>
+                        <VisualBrush.Visual>
+                            <Border
+                                Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=Border}}"
+                                Height="{Binding ActualHeight, RelativeSource={RelativeSource AncestorType=Border}}"
+                                Background="White"
+                                CornerRadius="2" />
+                        </VisualBrush.Visual>
+                    </VisualBrush>
+                </Border.OpacityMask>
             </Border>
-        </Button>
+
+            <TextBlock
+                Grid.Column="1"
+                Margin="10,0"
+                VerticalAlignment="Center"
+                FontSize="12"
+                FontWeight="Medium"
+                Text="{Binding Name}"
+                TextTrimming="CharacterEllipsis" />
+
+            <TextBlock
+                Grid.Column="2"
+                VerticalAlignment="Center"
+                FontSize="12"
+                Text="{Binding CurrentSong}"
+                TextTrimming="CharacterEllipsis" />
+        </Grid>
     </DataTemplate>
 </ResourceDictionary>

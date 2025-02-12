@@ -1,32 +1,19 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using CommunityToolkit.Mvvm.Messaging;
 using OpenOFM.Core.Models;
-using OpenOFM.Core.Services;
-using OpenOFM.Core.Stores;
-using OpenOFM.Ui.Messages;
 using System.Text;
-using System.Windows;
 
 namespace OpenOFM.Ui.ViewModels.Items
 {
-    internal partial class RadioStationItemViewModel : ObservableObject, IDisposable
+    internal partial class RadioStationItemViewModel : ObservableObject, IEquatable<RadioStationItemViewModel>
     {
-        private readonly IPlaylistStore _playlists;
-        private readonly IPlayerService _player;
+        public RadioStation Station { get; }
 
-        public RadioStation Station { get; set; } = new();
+        [ObservableProperty, NotifyPropertyChangedFor(nameof(CurrentSong))]
+        private Playlist? _playlist;
 
-        public RadioStationItemViewModel(IPlaylistStore playlists, IPlayerService player)
+        public RadioStationItemViewModel(RadioStation station)
         {
-            _playlists = playlists;
-            _player = player;
-            _player.StationChanged += OnStationChanged;
-
-            WeakReferenceMessenger.Default.Register<PlaylistsUpdatedNotification>(this, (sender, _) =>
-            {
-                OnPropertyChanged(nameof(CurrentSong));
-            });
+            Station = station;
         }
 
         public int Id
@@ -38,17 +25,11 @@ namespace OpenOFM.Ui.ViewModels.Items
         public IReadOnlyList<RadioCategory> Categories
             => Station.Categories;
 
-        public bool IsPlaying
-        {
-            get => _player.CurrentStation == Station;
-        }
-
         public string CurrentSong
         {
             get
             {
-                var playlist = _playlists.GetPlaylist(Station.Id, DateTime.Now);
-                var currentSong = playlist?.Queue.ElementAtOrDefault(0);
+                var currentSong = Playlist?.Queue.ElementAtOrDefault(0);
                 var isFullTitle = !string.IsNullOrWhiteSpace(currentSong?.Title) &&
                                   !string.IsNullOrWhiteSpace(currentSong?.Artist);
 
@@ -64,20 +45,29 @@ namespace OpenOFM.Ui.ViewModels.Items
             }
         }
 
-        [RelayCommand]
-        private void OnClick()
+        public bool Equals(RadioStationItemViewModel? other)
         {
-            _player.Play(Station);
+            return other?.Id == Id;
         }
 
-        private void OnStationChanged(object sender, RadioStation? station)
+        public override bool Equals(object? obj)
         {
-            OnPropertyChanged(nameof(IsPlaying));
+            return Equals(obj as RadioStationItemViewModel);
         }
 
-        public void Dispose()
+        public override int GetHashCode()
         {
-            _player.StationChanged -= OnStationChanged;
+            return Id.GetHashCode();
+        }
+
+        public static bool operator ==(RadioStationItemViewModel? x, RadioStationItemViewModel? y)
+        {
+            return x?.Equals(y) == true;
+        }
+
+        public static bool operator !=(RadioStationItemViewModel? x, RadioStationItemViewModel? y)
+        {
+            return !(x == y);
         }
     }
 }

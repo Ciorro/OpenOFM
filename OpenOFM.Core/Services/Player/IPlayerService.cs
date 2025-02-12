@@ -1,6 +1,6 @@
 ﻿using OpenOFM.Core.Models;
 
-namespace OpenOFM.Core.Services
+namespace OpenOFM.Core.Services.Player
 {
     public delegate void StationChangedEventHandler(object sender, RadioStation? newStation);
 

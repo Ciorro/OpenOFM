@@ -37,8 +37,8 @@ namespace OpenOFM.Ui.Controls
         }
 
         public static readonly DependencyProperty TitleProperty = DependencyProperty.Register(
-            "Title", 
-            typeof(string), 
+            "Title",
+            typeof(string),
             typeof(InfoBar));
 
 
@@ -49,8 +49,8 @@ namespace OpenOFM.Ui.Controls
         }
 
         public static readonly DependencyProperty MessageProperty = DependencyProperty.Register(
-            "Message", 
-            typeof(string), 
+            "Message",
+            typeof(string),
             typeof(InfoBar));
 
 
@@ -61,9 +61,9 @@ namespace OpenOFM.Ui.Controls
         }
 
         public static readonly DependencyProperty IsOpenProperty = DependencyProperty.Register(
-            "IsOpen", 
-            typeof(bool), 
-            typeof(InfoBar), 
+            "IsOpen",
+            typeof(bool),
+            typeof(InfoBar),
             new PropertyMetadata(true));
 
 
@@ -74,9 +74,9 @@ namespace OpenOFM.Ui.Controls
         }
 
         public static readonly DependencyProperty IsClosableProperty = DependencyProperty.Register(
-            "IsClosable", 
-            typeof(bool), 
-            typeof(InfoBar), 
+            "IsClosable",
+            typeof(bool),
+            typeof(InfoBar),
             new PropertyMetadata(true));
 
 
@@ -87,9 +87,9 @@ namespace OpenOFM.Ui.Controls
         }
 
         public static readonly DependencyProperty SeverityProperty = DependencyProperty.Register(
-            "Severity", 
-            typeof(MessageSeverity), 
-            typeof(InfoBar), 
+            "Severity",
+            typeof(MessageSeverity),
+            typeof(InfoBar),
             new PropertyMetadata(MessageSeverity.Info));
     }
 }

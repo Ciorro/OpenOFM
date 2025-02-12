@@ -3,6 +3,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="clr-namespace:OpenOFM.Ui.Controls"
     xmlns:converter="clr-namespace:OpenOFM.Ui.Converters"
+    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
     xmlns:pagesVms="clr-namespace:OpenOFM.Ui.ViewModels.Pages">
     <DataTemplate DataType="{x:Type pagesVms:HomePageViewModel}">
         <DockPanel>
@@ -16,38 +17,59 @@
                 <StackPanel>
                     <GroupBox
                         Margin="16"
-                        Padding="0,8"
+                        Padding="-8,8"
                         Header="Polecane stacje">
-                        <ItemsControl ItemTemplate="{StaticResource RadioStationGridItem}" ItemsSource="{Binding FeaturedStations}">
-                            <ItemsControl.ItemsPanel>
+                        <ListView
+                            ItemTemplate="{StaticResource RadioStationGridItem}"
+                            ItemsSource="{Binding FeaturedStations}"
+                            SelectedItem="{Binding SelectedFeaturedStation}"
+                            SelectionMode="Single">
+                            <ListView.Template>
+                                <ControlTemplate>
+                                    <ItemsPresenter />
+                                </ControlTemplate>
+                            </ListView.Template>
+                            <ListView.ItemsPanel>
                                 <ItemsPanelTemplate>
                                     <controls:FlexUniformGrid Margin="-4" MinItemWidth="300" />
                                 </ItemsPanelTemplate>
-                            </ItemsControl.ItemsPanel>
-                            <ItemsControl.ItemContainerStyle>
-                                <Style>
-                                    <Setter Property="FrameworkElement.Margin" Value="4" />
+                            </ListView.ItemsPanel>
+                            <ListView.ItemContainerStyle>
+                                <Style BasedOn="{StaticResource DefaultListViewItemStyle}" TargetType="ListViewItem">
+                                    <Setter Property="Margin" Value="4" />
+                                    <Setter Property="Padding" Value="8,4" />
                                 </Style>
-                            </ItemsControl.ItemContainerStyle>
-                        </ItemsControl>
+                            </ListView.ItemContainerStyle>
+                        </ListView>
                     </GroupBox>
                     <GroupBox
                         Margin="16,0"
-                        Padding="0,8"
+                        Padding="-8,8"
                         Header="Wybrane dla Ciebie">
                         <Grid>
                             <controls:InfoBar
                                 Title="Nic tu jeszcze nie ma"
+                                Margin="8,0"
                                 IsClosable="False"
                                 IsOpen="{Binding RecommendedStations.Count, Converter={converter:ValueLessThanToBoolConverter}, ConverterParameter=1}"
                                 Message="Dodawaj piosenki do listy ulubionych, abyśmy mogli polecać Ci stacje radiowe." />
-                            <ItemsControl ItemTemplate="{StaticResource RadioStationListItem}" ItemsSource="{Binding RecommendedStations}">
-                                <ItemsControl.ItemContainerStyle>
-                                    <Style>
-                                        <Setter Property="FrameworkElement.Margin" Value="0,2" />
+
+                            <ListView
+                                ItemTemplate="{StaticResource RadioStationListItem}"
+                                ItemsSource="{Binding RecommendedStations}"
+                                SelectedItem="{Binding SelectedRecommendedStation}"
+                                SelectionMode="Single">
+                                <ListView.Template>
+                                    <ControlTemplate>
+                                        <ItemsPresenter />
+                                    </ControlTemplate>
+                                </ListView.Template>
+                                <ListView.ItemContainerStyle>
+                                    <Style BasedOn="{StaticResource DefaultListViewItemStyle}" TargetType="ListViewItem">
+                                        <Setter Property="Padding" Value="8,0,0,0" />
                                     </Style>
-                                </ItemsControl.ItemContainerStyle>
-                            </ItemsControl>
+                                </ListView.ItemContainerStyle>
+                            </ListView>
                         </Grid>
                     </GroupBox>
                 </StackPanel>

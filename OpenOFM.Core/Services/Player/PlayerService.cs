@@ -3,9 +3,8 @@ using OpenOFM.Core.Collections;
 using OpenOFM.Core.Models;
 using OpenOFM.Core.Settings;
 using OpenOFM.Core.Settings.Configurations;
-using OpenOFM.Core.Streaming.Playback;
 
-namespace OpenOFM.Core.Services
+namespace OpenOFM.Core.Services.Player
 {
     public class PlayerService : IPlayerService
     {
@@ -16,7 +15,7 @@ namespace OpenOFM.Core.Services
         private readonly HttpClient _httpClient;
         private readonly HistoryCollection<RadioStation> _history = new();
 
-        private Player? _player;
+        private Streaming.Playback.Player? _player;
         private RadioStation? _currentStation;
 
         public PlayerService(ISettingsProvider<AppSettings> settings, TokenApiClient tokenApi)
@@ -63,7 +62,11 @@ namespace OpenOFM.Core.Services
         public async Task Play(RadioStation radioStation)
         {
             await PlayInternal(radioStation);
-            _history.Push(radioStation);
+
+            if (radioStation is not null)
+            {
+                _history.Push(radioStation);
+            }
         }
 
         public async Task PlayPrevious()
@@ -106,7 +109,7 @@ namespace OpenOFM.Core.Services
                 Stop();
             }
 
-            _player = new Player(new Uri(streamUrl), _httpClient, _settings.CurrentSettings.MaxDelay);
+            _player = new Streaming.Playback.Player(new Uri(streamUrl), _httpClient, _settings.CurrentSettings.MaxDelay);
             _player.Play();
             _player.Volume = Volume;
 

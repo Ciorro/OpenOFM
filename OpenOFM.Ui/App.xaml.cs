@@ -1,7 +1,10 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using OpenOFM.Core.Api;
-using OpenOFM.Core.Services;
+using OpenOFM.Core.Models;
+using OpenOFM.Core.Services.Player;
+using OpenOFM.Core.Services.Playlists;
+using OpenOFM.Core.Services.Stations;
 using OpenOFM.Core.Settings;
 using OpenOFM.Core.Settings.Configurations;
 using OpenOFM.Core.Stores;
@@ -10,7 +13,6 @@ using OpenOFM.Ui.Input;
 using OpenOFM.Ui.Navigation;
 using OpenOFM.Ui.Services;
 using OpenOFM.Ui.ViewModels;
-using OpenOFM.Ui.ViewModels.Items;
 using OpenOFM.Ui.Windows;
 using System.Windows;
 
@@ -24,11 +26,8 @@ namespace OpenOFM.Ui
         {
             _appHost = Host.CreateDefaultBuilder().ConfigureServices(services =>
             {
+                services.AddSingleton<IPlaylistService, PlaylistService>();
                 services.AddSingleton<IPlayerService, PlayerService>();
-                services.AddSingleton<IPlaylistStore, PlaylistStore>();
-                services.AddSingleton<IStationsStore, StationsStore>();
-                services.AddSingleton<IRecommendationService, RecommendationService>();
-                services.AddSingleton<IFeaturedService, FeaturedService>();
                 services.AddSingleton<INavigationService, NavigationService>((s) =>
                 {
                     return new NavigationService((pageKey) => s.GetRequiredKeyedService<IPage>(pageKey));
@@ -40,7 +39,11 @@ namespace OpenOFM.Ui
                 services.AddApi();
                 services.AddPages();
 
-                services.AddFactory<RadioStationItemViewModel>();
+                services.AddSingleton<IStationsProvider, ApiStationsProvider>();
+                services.AddKeyedSingleton<IStationsProvider, RecommendedStationsProvider>(StationProviderKey.Recommended);
+                services.AddKeyedSingleton<IStationsProvider, FeaturedStationsProvider>(StationProviderKey.Featured);
+
+                services.AddSingleton<IStore<IReadOnlyCollection<Playlist>>, Store<IReadOnlyCollection<Playlist>>>();
 
                 services.AddSingleton<ApplicationViewModel>();
                 services.AddSingleton<Window>((s) =>
@@ -53,7 +56,7 @@ namespace OpenOFM.Ui
                         new AcrylicWindow(settings) { DataContext = dataContext };
                 });
 
-                services.AddHostedService<PlaylistService>();
+                services.AddHostedService<PlaylistBackgroundService>();
 
             }).Build();
         }
@@ -63,7 +66,6 @@ namespace OpenOFM.Ui
             KeyboardListener.Start();
 
             //TODO: Async radio station providers and loading indicators.
-            await LoadRadioStations();
             await LoadPlaylists();
 
             _appHost.Start();
@@ -88,44 +90,15 @@ namespace OpenOFM.Ui
             return Environment.OSVersion.Version.Major == 10 && Environment.OSVersion.Version.Build >= 22000;
         }
 
-        private async Task LoadRadioStations()
-        {
-            var stationsStore = _appHost.Services.GetRequiredService<IStationsStore>();
-            var stationsApi = _appHost.Services.GetRequiredService<StationsApiClient>();
-
-            try
-            {
-                var stations = await stationsApi.GetRadioStations();
-
-                foreach (var station in stations)
-                {
-                    stationsStore.AddStation(station);
-                }
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show(
-                    "Nie udało się załadować stacji radiowych.",
-                    "Błąd",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Error);
-                Application.Current.Shutdown();
-            }
-        }
-
         private async Task LoadPlaylists()
         {
-            var playlistStore = _appHost.Services.GetRequiredService<IPlaylistStore>();
+            var playlistStore = _appHost.Services.GetRequiredService<IStore<IReadOnlyCollection<Playlist>>>();
             var playlistApi = _appHost.Services.GetRequiredService<PlaylistApiClient>();
 
             try
             {
                 var playlists = await playlistApi.GetPlaylists();
-
-                foreach (var playlist in playlists)
-                {
-                    playlistStore.AddPlaylist(playlist);
-                }
+                playlistStore.SetValue(playlists.ToHashSet());
             }
             catch { }
         }

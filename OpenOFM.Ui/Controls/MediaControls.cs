@@ -1,6 +1,5 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
 
 namespace OpenOFM.Ui.Controls
 {
@@ -62,10 +61,10 @@ namespace OpenOFM.Ui.Controls
         }
 
         public static readonly DependencyProperty IsPausedProperty = DependencyProperty.Register(
-            "IsPaused", 
-            typeof(bool), 
-            typeof(MediaControls), 
-            new FrameworkPropertyMetadata(false, 
+            "IsPaused",
+            typeof(bool),
+            typeof(MediaControls),
+            new FrameworkPropertyMetadata(false,
                 FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
 
@@ -76,10 +75,10 @@ namespace OpenOFM.Ui.Controls
         }
 
         public static readonly DependencyProperty IsMutedProperty = DependencyProperty.Register(
-            "IsMuted", 
-            typeof(bool), 
-            typeof(MediaControls), 
-            new FrameworkPropertyMetadata(false, 
+            "IsMuted",
+            typeof(bool),
+            typeof(MediaControls),
+            new FrameworkPropertyMetadata(false,
                 FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
 
@@ -90,10 +89,10 @@ namespace OpenOFM.Ui.Controls
         }
 
         public static readonly DependencyProperty VolumeProperty = DependencyProperty.Register(
-            "Volume", 
-            typeof(float), 
-            typeof(MediaControls), 
-            new FrameworkPropertyMetadata(1f, 
+            "Volume",
+            typeof(float),
+            typeof(MediaControls),
+            new FrameworkPropertyMetadata(1f,
                 FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
 
@@ -104,10 +103,10 @@ namespace OpenOFM.Ui.Controls
         }
 
         public static readonly DependencyProperty DelayProperty = DependencyProperty.Register(
-            "Delay", 
-            typeof(TimeSpan), 
-            typeof(MediaControls), 
-            new FrameworkPropertyMetadata(TimeSpan.Zero, 
+            "Delay",
+            typeof(TimeSpan),
+            typeof(MediaControls),
+            new FrameworkPropertyMetadata(TimeSpan.Zero,
                 FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
     }
 }

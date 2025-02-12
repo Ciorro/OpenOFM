@@ -1,11 +1,9 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Messaging;
 using OpenOFM.Core.Models;
-using OpenOFM.Core.Services;
+using OpenOFM.Core.Services.Player;
+using OpenOFM.Core.Services.Playlists;
 using OpenOFM.Core.Settings;
 using OpenOFM.Core.Settings.Configurations;
-using OpenOFM.Core.Stores;
-using OpenOFM.Ui.Messages;
 using OpenOFM.Ui.Navigation.Attributes;
 using OpenOFM.Ui.ViewModels.Items;
 
@@ -14,8 +12,8 @@ namespace OpenOFM.Ui.ViewModels.Pages
     [PageKey("Player")]
     internal partial class PlayerPageViewModel : BasePageViewModel
     {
+        private readonly IPlaylistService _playlistService;
         private readonly IPlayerService _playerService;
-        private readonly IPlaylistStore _playlistStore;
         private readonly ISettingsProvider<Favorites> _favorites;
 
         private SongItemViewModel[] _playlist = [];
@@ -23,13 +21,11 @@ namespace OpenOFM.Ui.ViewModels.Pages
         [ObservableProperty]
         private RadioStation? _currentStation;
 
-        public PlayerPageViewModel(
-            IPlayerService playerService,
-            IPlaylistStore playlistStore,
-            ISettingsProvider<Favorites> favorites)
+        public PlayerPageViewModel(IPlaylistService playlistService, IPlayerService playerService, ISettingsProvider<Favorites> favorites)
         {
             _favorites = favorites;
-            _playlistStore = playlistStore;
+            _playlistService = playlistService;
+
             _playerService = playerService;
             _playerService.StationChanged += (sender, station) =>
             {
@@ -39,11 +35,6 @@ namespace OpenOFM.Ui.ViewModels.Pages
                     UpdatePlaylist();
                 }
             };
-
-            WeakReferenceMessenger.Default.Register<PlaylistsUpdatedNotification>(this, (sender, _) =>
-            {
-                UpdatePlaylist();
-            });
         }
 
         public SongItemViewModel? CurrentSong
@@ -62,11 +53,16 @@ namespace OpenOFM.Ui.ViewModels.Pages
             UpdatePlaylist();
         }
 
+        private void UpdateStation()
+        {
+            CurrentStation = _playerService.CurrentStation;
+        }
+
         private void UpdatePlaylist()
         {
             var id = _playerService.CurrentStation!.Id;
             var timeFrom = DateTime.Now - _playerService.GetDelay();
-            var playlist = _playlistStore.GetPlaylist(id, timeFrom);
+            var playlist = _playlistService.GetPlaylist(id, timeFrom);
 
             if (playlist is not null && playlist.Queue.Any())
             {
@@ -81,11 +77,6 @@ namespace OpenOFM.Ui.ViewModels.Pages
                 OnPropertyChanged(nameof(CurrentSong));
                 OnPropertyChanged(nameof(UpcomingSongs));
             }
-        }
-
-        private void UpdateStation()
-        {
-            CurrentStation = _playerService?.CurrentStation;
         }
 
         private void OnIsFavoriteChanged(SongItemViewModel sender, bool isFavorite)

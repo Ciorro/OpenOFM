@@ -1,50 +1,92 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using OpenOFM.Core.Stores;
-using OpenOFM.Ui.Factories;
+using CommunityToolkit.Mvvm.Input;
+using OpenOFM.Core.Services.Player;
+using OpenOFM.Core.Services.Playlists;
+using OpenOFM.Core.Services.Stations;
 using OpenOFM.Ui.Navigation.Attributes;
 using OpenOFM.Ui.ViewModels.Items;
+using System.Windows;
 
 namespace OpenOFM.Ui.ViewModels.Pages
 {
     [PageKey("RadioStations")]
     internal partial class StationsPageViewModel : BasePageViewModel
     {
-        private readonly IStationsStore _stations;
-        private readonly IAbstractFactory<RadioStationItemViewModel> _radioItemFactory;
+        private readonly IStationsProvider _stationsProvider;
+        private readonly IPlayerService _playerService;
+        private readonly IPlaylistService _playlistService;
+
+        private CancellationTokenSource? _loadingCancellationToken;
 
         [ObservableProperty]
         private List<RadioStationItemViewModel>? _radioStations;
 
-        public StationsPageViewModel(IAbstractFactory<RadioStationItemViewModel> radioItemFactory,
-            IStationsStore stations)
+        public StationsPageViewModel(
+            IStationsProvider stationsProvider,
+            IPlayerService playerService,
+            IPlaylistService playlistService)
         {
-            _stations = stations;
-            _radioItemFactory = radioItemFactory;
+            _stationsProvider = stationsProvider;
+            _playlistService = playlistService;
+
+            _playerService = playerService;
+            _playerService.StationChanged += (sender, station) =>
+            {
+                OnPropertyChanged(nameof(SelectedStation));
+            };
         }
 
-        public override void OnResumed()
+        public RadioStationItemViewModel? SelectedStation
         {
-            if (RadioStations is null)
+            get => RadioStations?.SingleOrDefault(x => x.Id == _playerService.CurrentStation?.Id);
+            set
             {
-                PopulateStations();
+                if (value?.Equals(_playerService.CurrentStation) == false)
+                {
+                    _playerService.Play(value.Station);
+                }
             }
         }
 
-        private void PopulateStations()
+        public override async void OnResumed()
+        {
+            try
+            {
+                _loadingCancellationToken = new CancellationTokenSource();
+                await PopulateStations(_loadingCancellationToken.Token);
+            }
+            catch (OperationCanceledException) { }
+            catch (Exception e)
+            {
+                //TODO: Log
+                Console.WriteLine(e.ToString());
+            }
+        }
+
+        public override void OnPaused()
+        {
+            _loadingCancellationToken?.Cancel();
+        }
+
+        private async Task PopulateStations(CancellationToken ct)
+        {
+            var stationsModels = (await _stationsProvider.GetStations(ct))
+                .Select(x => new RadioStationItemViewModel(x));
+
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                RadioStations = stationsModels.ToList();
+                UpdatePlaylists();
+            });
+        }
+
+        [RelayCommand]
+        private void UpdatePlaylists()
         {
             foreach (var item in RadioStations ?? [])
             {
-                item.Dispose();
+                item.Playlist = _playlistService.GetPlaylist(item.Id, DateTime.Now);
             }
-
-            RadioStations = _stations.GetAllRadioStations()
-                .OrderBy(x => x.Name)
-                .Select(x =>
-                {
-                    var item = _radioItemFactory.Create();
-                    item.Station = x;
-                    return item;
-                }).ToList();
         }
     }
 }

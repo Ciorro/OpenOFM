@@ -30,7 +30,7 @@ namespace OpenOFM.Ui.Native
         // Dwmapi
         [DllImport("dwmapi.dll")]
         public static extern int DwmSetWindowAttribute(nint hWnd, int dwAttribute, ref uint pvAttribute, int cbAttribute);
-        
+
 
         // Kernel32
         [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
