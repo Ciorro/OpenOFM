@@ -24,7 +24,15 @@ namespace OpenOFM.Ui.ViewModels.Pages
         public PlayerPageViewModel(IPlaylistService playlistService, IPlayerService playerService, ISettingsProvider<Favorites> favorites)
         {
             _favorites = favorites;
+
             _playlistService = playlistService;
+            _playlistService.PlaylistAvailable += (playlist) =>
+            {
+                if (playlist.RadioStationId == CurrentStation?.Id)
+                {
+                    UpdatePlaylist();
+                }
+            };
 
             _playerService = playerService;
             _playerService.StationChanged += (sender, station) =>

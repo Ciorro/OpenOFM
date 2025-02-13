@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.Hosting;
 using OpenOFM.Core.Api;
-using OpenOFM.Core.Models;
-using OpenOFM.Core.Stores;
+using OpenOFM.Core.Services.Playlists;
 using System.Net.Http;
 
 namespace OpenOFM.Ui.Services
@@ -9,11 +8,11 @@ namespace OpenOFM.Ui.Services
     internal class PlaylistBackgroundService : BackgroundService
     {
         private readonly PlaylistApiClient _playlistApi;
-        private readonly IStore<IReadOnlyCollection<Playlist>> _playlists;
+        private readonly IPlaylistService _playlistService;
 
-        public PlaylistBackgroundService(IStore<IReadOnlyCollection<Playlist>> playlists, PlaylistApiClient playlistApi)
+        public PlaylistBackgroundService(IPlaylistService playlistService, PlaylistApiClient playlistApi)
         {
-            _playlists = playlists;
+            _playlistService = playlistService;
             _playlistApi = playlistApi;
         }
 
@@ -23,7 +22,12 @@ namespace OpenOFM.Ui.Services
             {
                 try
                 {
-                    _playlists.SetValue((await _playlistApi.GetPlaylists(stoppingToken)).ToHashSet());
+                    var playlists = await _playlistApi.GetPlaylists(stoppingToken);
+
+                    foreach (var playlist in playlists)
+                    {
+                        _playlistService.SetPlaylist(playlist);
+                    }
                 }
                 catch (HttpRequestException) { }
 

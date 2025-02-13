@@ -7,7 +7,6 @@ using OpenOFM.Core.Services.Playlists;
 using OpenOFM.Core.Services.Stations;
 using OpenOFM.Core.Settings;
 using OpenOFM.Core.Settings.Configurations;
-using OpenOFM.Core.Stores;
 using OpenOFM.Ui.Extensions;
 using OpenOFM.Ui.Input;
 using OpenOFM.Ui.Navigation;
@@ -42,8 +41,6 @@ namespace OpenOFM.Ui
                 services.AddSingleton<IStationsProvider, ApiStationsProvider>();
                 services.AddKeyedSingleton<IStationsProvider, RecommendedStationsProvider>(StationProviderKey.Recommended);
                 services.AddKeyedSingleton<IStationsProvider, FeaturedStationsProvider>(StationProviderKey.Featured);
-
-                services.AddSingleton<IStore<IReadOnlyCollection<Playlist>>, Store<IReadOnlyCollection<Playlist>>>();
 
                 services.AddSingleton<ApplicationViewModel>();
                 services.AddSingleton<Window>((s) =>
@@ -92,13 +89,17 @@ namespace OpenOFM.Ui
 
         private async Task LoadPlaylists()
         {
-            var playlistStore = _appHost.Services.GetRequiredService<IStore<IReadOnlyCollection<Playlist>>>();
+            var playlistService = _appHost.Services.GetRequiredService<IPlaylistService>();
             var playlistApi = _appHost.Services.GetRequiredService<PlaylistApiClient>();
 
             try
             {
                 var playlists = await playlistApi.GetPlaylists();
-                playlistStore.SetValue(playlists.ToHashSet());
+
+                foreach (var playlist in playlists)
+                {
+                    playlistService.SetPlaylist(playlist);
+                }
             }
             catch { }
         }

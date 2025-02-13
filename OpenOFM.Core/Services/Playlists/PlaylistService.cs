@@ -1,20 +1,28 @@
 ﻿using OpenOFM.Core.Models;
-using OpenOFM.Core.Stores;
 
 namespace OpenOFM.Core.Services.Playlists
 {
     public class PlaylistService : IPlaylistService
     {
-        private readonly IStore<IReadOnlyCollection<Playlist>> _playlistStore;
+        public event PlaylistAvailableEventHandler? PlaylistAvailable;
+        private readonly Dictionary<int, Playlist> _playlists = [];
 
-        public PlaylistService(IStore<IReadOnlyCollection<Playlist>> playlistStore)
+        public void SetPlaylist(Playlist playlist)
         {
-            _playlistStore = playlistStore;
+            _playlists[playlist.RadioStationId] = playlist;
+            PlaylistAvailable?.Invoke(playlist);
         }
 
-        public Playlist GetPlaylist(int stationId, DateTime timeFrom)
+        public Playlist? GetPlaylist(int stationId, DateTime timeFrom)
         {
-            return _playlistStore.Value?.Single(x => x.RadioStationId == stationId) ?? new(stationId);
+            //TODO: Record playlist of a paused station.
+
+            if (_playlists.TryGetValue(stationId, out var playlist))
+            {
+                return playlist;
+            }
+
+            return null;
         }
     }
 }

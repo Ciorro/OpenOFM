@@ -2,8 +2,12 @@
 
 namespace OpenOFM.Core.Services.Playlists
 {
+    public delegate void PlaylistAvailableEventHandler(Playlist playlist);
+
     public interface IPlaylistService
     {
-        Playlist GetPlaylist(int stationId, DateTime timeFrom);
+        event PlaylistAvailableEventHandler? PlaylistAvailable;
+        void SetPlaylist(Playlist playlist);
+        Playlist? GetPlaylist(int stationId, DateTime timeFrom);
     }
 }
