@@ -18,54 +18,34 @@
     <Window.TaskbarItemInfo>
         <TaskbarItemInfo>
             <TaskbarItemInfo.ThumbButtonInfos>
+                <!--  Previous station  -->
                 <ThumbButtonInfo
-                    Command="{Binding PreviousStationCommand}"
+                    Command="{Binding MediaControlsViewModel.PlayPreviousStationCommand}"
                     Description="Poprzednia stacja"
                     ImageSource="/Assets/previous.png"
-                    Visibility="{Binding CurrentStation, Converter={converter:ValueNotEqualsToVisibilityConverter}}" />
-                <ThumbButtonInfo Description="Odtwarzaj" ImageSource="/Assets/play.png">
-                    <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="Click">
-                            <i:ChangePropertyAction
-                                PropertyName="IsPaused"
-                                TargetObject="{Binding}"
-                                Value="False" />
-                        </i:EventTrigger>
-                    </i:Interaction.Triggers>
-                    <ThumbButtonInfo.Visibility>
-                        <MultiBinding Converter="{converter:AllValuesEqualToVisibilityConverter}" ConverterParameter="{x:Static Visibility.Visible}">
-                            <Binding
-                                Converter="{converter:ValueEqualsToVisibilityConverter}"
-                                ConverterParameter="True"
-                                Path="IsPaused" />
-                            <Binding Converter="{converter:ValueNotEqualsToVisibilityConverter}" Path="CurrentStation" />
-                        </MultiBinding>
-                    </ThumbButtonInfo.Visibility>
-                </ThumbButtonInfo>
-                <ThumbButtonInfo Description="Zatrzymaj" ImageSource="/Assets/pause.png">
-                    <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="Click">
-                            <i:ChangePropertyAction
-                                PropertyName="IsPaused"
-                                TargetObject="{Binding}"
-                                Value="True" />
-                        </i:EventTrigger>
-                    </i:Interaction.Triggers>
-                    <ThumbButtonInfo.Visibility>
-                        <MultiBinding Converter="{converter:AllValuesEqualToVisibilityConverter}" ConverterParameter="{x:Static Visibility.Visible}">
-                            <Binding
-                                Converter="{converter:ValueEqualsToVisibilityConverter}"
-                                ConverterParameter="False"
-                                Path="IsPaused" />
-                            <Binding Converter="{converter:ValueNotEqualsToVisibilityConverter}" Path="CurrentStation" />
-                        </MultiBinding>
-                    </ThumbButtonInfo.Visibility>
-                </ThumbButtonInfo>
+                    IsEnabled="{Binding CurrentStation, Converter={converter:ValueNotEqualsToBoolConverter}}" />
+
+                <!--  Play/Pause  -->
                 <ThumbButtonInfo
-                    Command="{Binding NextStationCommand}"
+                    Description="{Binding MediaControlsViewModel.TaskbarMediaControlsDescription}"
+                    ImageSource="{Binding MediaControlsViewModel.TaskbarMediaControlsIcon, FallbackValue='pack://application:,,,/Assets/pause.png'}"
+                    IsEnabled="{Binding CurrentStation, Converter={converter:ValueNotEqualsToBoolConverter}}">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click">
+                            <i:ChangePropertyAction
+                                PropertyName="IsPaused"
+                                TargetObject="{Binding MediaControlsViewModel}"
+                                Value="{Binding MediaControlsViewModel.IsPaused, Converter={converter:ValueEqualsToBoolConverter}, ConverterParameter=False}" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </ThumbButtonInfo>
+
+                <!--  Next station  -->
+                <ThumbButtonInfo
+                    Command="{Binding MediaControlsViewModel.PlayNextStationCommand}"
                     Description="Następna stacja"
                     ImageSource="/Assets/next.png"
-                    Visibility="{Binding CurrentStation, Converter={converter:ValueNotEqualsToVisibilityConverter}}" />
+                    IsEnabled="{Binding CurrentStation, Converter={converter:ValueNotEqualsToBoolConverter}}" />
             </TaskbarItemInfo.ThumbButtonInfos>
         </TaskbarItemInfo>
     </Window.TaskbarItemInfo>
