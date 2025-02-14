@@ -6,7 +6,7 @@
     xmlns:fi="clr-namespace:FluentIcons.Wpf;assembly=FluentIcons.Wpf"
     xmlns:pagesVms="clr-namespace:OpenOFM.Ui.ViewModels.Pages">
     <DataTemplate DataType="{x:Type pagesVms:PlayerPageViewModel}">
-        <StackPanel Margin="16,0">
+        <StackPanel Margin="24,24,24,0">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" MaxWidth="200" />
@@ -40,7 +40,13 @@
                     Margin="0,12"
                     Padding="0,8,0,0"
                     Header="Następnie:">
-                    <ItemsControl ItemTemplate="{StaticResource SongListItem}" ItemsSource="{Binding UpcomingSongs}" />
+                    <ItemsControl ItemTemplate="{StaticResource SongListItem}" ItemsSource="{Binding UpcomingSongs}">
+                        <ItemsControl.ItemContainerStyle>
+                            <Style TargetType="FrameworkElement">
+                                <Setter Property="Margin" Value="0,0,0,1" />
+                            </Style>
+                        </ItemsControl.ItemContainerStyle>
+                    </ItemsControl>
                 </GroupBox>
             </StackPanel>
         </StackPanel>

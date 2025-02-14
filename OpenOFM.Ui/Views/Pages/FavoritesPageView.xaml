@@ -5,7 +5,7 @@
     <DataTemplate DataType="{x:Type pagesVms:FavoritesPageViewModel}">
         <DockPanel>
             <DockPanel
-                Margin="16,0"
+                Margin="24,16,24,0"
                 DockPanel.Dock="Top"
                 LastChildFill="False">
                 <TextBlock DockPanel.Dock="Left" Style="{StaticResource TitleTextBlockStyle}">
@@ -35,11 +35,16 @@
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <VirtualizingStackPanel
-                            Margin="16,0,16,16"
+                            Margin="24,0,24,16"
                             IsVirtualizing="True"
                             VirtualizationMode="Recycling" />
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemContainerStyle>
+                    <Style TargetType="FrameworkElement">
+                        <Setter Property="Margin" Value="0,0,0,1" />
+                    </Style>
+                </ItemsControl.ItemContainerStyle>
             </ItemsControl>
         </DockPanel>
     </DataTemplate>

@@ -9,7 +9,7 @@
     xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
     xmlns:viewModels="clr-namespace:OpenOFM.Ui.ViewModels">
     <DataTemplate DataType="{x:Type viewModels:ApplicationViewModel}">
-        <Grid>
+        <Grid Background="Transparent">
             <!--  Navigation with mouse buttons  -->
             <i:Interaction.Triggers>
                 <e:BackButtonEventTrigger EventName="MouseUp">
@@ -20,16 +20,40 @@
                 </e:NextButtonEventTrigger>
             </i:Interaction.Triggers>
 
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
+            <!--  Titlebar  -->
+            <Grid Grid.ColumnSpan="2" Margin="20,0">
+                <TextBlock VerticalAlignment="Center">
+                    <InlineUIContainer BaselineAlignment="Center">
+                        <Image
+                            Width="16"
+                            Height="16"
+                            Margin="0,0,10,0"
+                            RenderOptions.BitmapScalingMode="Fant"
+                            Source="/Assets/icon.png" />
+                    </InlineUIContainer>
+                    <Run
+                        BaselineAlignment="TextTop"
+                        FontSize="12"
+                        Text="Open OFM" />
+                </TextBlock>
+            </Grid>
+
             <!--  Sidebar  -->
             <controls:Sidebar
-                Title="Open OFM"
+                Grid.Row="1"
+                Margin="8,0,8,8"
                 CurrentPageKey="{Binding CurrentPageKey, Mode=TwoWay}"
-                Icon="/Assets/icon.png"
+                ExpandedWidth="244"
                 IsExpanded="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Converter={converters:ValueGreaterThanToBoolConverter}, ConverterParameter=800.0}">
                 <controls:SidebarItem
                     Content="Strona główna"
@@ -100,51 +124,49 @@
                 </controls:Sidebar.Footer>
             </controls:Sidebar>
 
-            <Grid Grid.Column="1">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
+            <!--  Content  -->
+            <Border
+                Grid.Row="1"
+                Grid.Column="1"
+                Background="{DynamicResource LayerFillColorDefaultBrush}"
+                BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+                BorderThickness="1,1,0,0"
+                CornerRadius="8,0,0,0"
+                SnapsToDevicePixels="True">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
 
-                <!--  TopBar  -->
-                <Button
-                    Margin="16,14"
-                    Padding="4"
-                    Command="{Binding NavigateBackCommand}">
-                    <fi:SymbolIcon HorizontalAlignment="Center" Symbol="ChevronLeft" />
-                </Button>
+                    <!--  Page  -->
+                    <ContentControl Margin="0,0,0,0" Content="{Binding CurrentPage}" />
 
-                <!--  Page  -->
-                <ContentControl
-                    Grid.Row="1"
-                    Margin="0,0,0,0"
-                    Content="{Binding CurrentPage}" />
-
-                <!--  Media controls  -->
-                <Border
-                    Grid.Row="2"
-                    Padding="8"
-                    Background="{DynamicResource LayerFillColorDefaultBrush}"
-                    BorderBrush="{DynamicResource ControlElevationBorderBrush}"
-                    BorderThickness="0,1,0,0"
-                    Visibility="{Binding CurrentStation, Converter={converters:ValueNotEqualsToVisibilityConverter}}">
-                    <controls:MediaControls
-                        Delay="{Binding Delay}"
-                        IsMuted="{Binding IsMuted}"
-                        IsPaused="{Binding IsPaused}"
-                        Volume="{Binding Volume}">
-                        <i:Interaction.Triggers>
-                            <i:EventTrigger EventName="PreviousClicked">
-                                <i:InvokeCommandAction Command="{Binding PreviousStationCommand}" />
-                            </i:EventTrigger>
-                            <i:EventTrigger EventName="NextClicked">
-                                <i:InvokeCommandAction Command="{Binding NextStationCommand}" />
-                            </i:EventTrigger>
-                        </i:Interaction.Triggers>
-                    </controls:MediaControls>
-                </Border>
-            </Grid>
+                    <!--  Media controls  -->
+                    <Border
+                        Grid.Row="1"
+                        Padding="8"
+                        Background="{DynamicResource LayerFillColorDefaultBrush}"
+                        BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+                        BorderThickness="0,1,0,0"
+                        Visibility="{Binding CurrentStation, Converter={converters:ValueNotEqualsToVisibilityConverter}}">
+                        <controls:MediaControls
+                            Delay="{Binding Delay}"
+                            IsMuted="{Binding IsMuted}"
+                            IsPaused="{Binding IsPaused}"
+                            Volume="{Binding Volume}">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="PreviousClicked">
+                                    <i:InvokeCommandAction Command="{Binding PreviousStationCommand}" />
+                                </i:EventTrigger>
+                                <i:EventTrigger EventName="NextClicked">
+                                    <i:InvokeCommandAction Command="{Binding NextStationCommand}" />
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </controls:MediaControls>
+                    </Border>
+                </Grid>
+            </Border>
         </Grid>
     </DataTemplate>
 </ResourceDictionary>

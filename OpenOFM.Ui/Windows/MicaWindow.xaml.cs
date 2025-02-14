@@ -45,7 +45,8 @@ namespace OpenOFM.Ui.Windows
             WindowChrome.SetWindowChrome(this, new WindowChrome
             {
                 GlassFrameThickness = new Thickness(-1),
-                NonClientFrameEdges = NonClientFrameEdges.Bottom
+                NonClientFrameEdges = NonClientFrameEdges.Bottom,
+                CaptionHeight = 50
             });
 
             uint captionColor = 0xFFFFFFFE;

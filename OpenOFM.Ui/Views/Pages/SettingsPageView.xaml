@@ -9,13 +9,13 @@
     <DataTemplate DataType="{x:Type pagesVms:SettingsPageViewModel}">
         <DockPanel>
             <TextBlock
-                Margin="16,0"
+                Margin="24,16,0,0"
                 DockPanel.Dock="Top"
                 Style="{StaticResource TitleTextBlockStyle}">
                 Ustawienia
             </TextBlock>
 
-            <ScrollViewer Padding="16">
+            <ScrollViewer Padding="24,16,24,0">
                 <StackPanel>
                     <GroupBox Padding="0,8" Header="Wygląd">
                         <controls:SettingsCard Description="Wybierz motyw aplikacji do wyświetlania" Header="Motyw">

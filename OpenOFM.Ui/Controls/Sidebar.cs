@@ -24,31 +24,6 @@ namespace OpenOFM.Ui.Controls
             base.OnApplyTemplate();
         }
 
-        public string Icon
-        {
-            get => (string)GetValue(IconProperty);
-            set => SetValue(IconProperty, value);
-        }
-
-        public static readonly DependencyProperty IconProperty = DependencyProperty.Register(
-            "Icon",
-            typeof(string),
-            typeof(Sidebar));
-
-
-        public string Title
-        {
-            get => (string)GetValue(TitleProperty);
-            set => SetValue(TitleProperty, value);
-        }
-
-        public static readonly DependencyProperty TitleProperty = DependencyProperty.Register(
-            "Title",
-            typeof(string),
-            typeof(Sidebar),
-            new PropertyMetadata(""));
-
-
         public bool IsExpanded
         {
             get => (bool)GetValue(IsExpandedProperty);
@@ -130,7 +105,7 @@ namespace OpenOFM.Ui.Controls
                 var animation = new DoubleAnimation();
                 animation.From = sidebar.ActualWidth;
                 animation.To = sidebar.IsExpanded ?
-                    sidebar.ExpandedWidth : 56;
+                    sidebar.ExpandedWidth : 40;
                 animation.Duration = TimeSpan.FromSeconds(0.2);
                 animation.EasingFunction = new CircleEase()
                 {

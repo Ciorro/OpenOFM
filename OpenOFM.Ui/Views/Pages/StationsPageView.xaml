@@ -7,7 +7,7 @@
     <DataTemplate DataType="{x:Type viewmodels:StationsPageViewModel}">
         <DockPanel>
             <TextBlock
-                Margin="16,0"
+                Margin="24,16,0,0"
                 DockPanel.Dock="Top"
                 Style="{StaticResource TitleTextBlockStyle}">
                 Stacje radiowe
@@ -15,7 +15,7 @@
 
             <ListView
                 Margin="0,16,0,0"
-                Padding="8,0,16,16"
+                Padding="16,0,24,0"
                 ItemTemplate="{StaticResource RadioStationListItem}"
                 ItemsSource="{Binding RadioStations}"
                 SelectedItem="{Binding SelectedStation}"

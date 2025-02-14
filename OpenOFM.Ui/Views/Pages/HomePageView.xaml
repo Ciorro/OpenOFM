@@ -8,17 +8,14 @@
     <DataTemplate DataType="{x:Type pagesVms:HomePageViewModel}">
         <DockPanel>
             <TextBlock
-                Margin="16,0"
+                Margin="24,16,0,0"
                 DockPanel.Dock="Top"
                 Style="{StaticResource TitleTextBlockStyle}">
                 Strona główna
             </TextBlock>
-            <ScrollViewer>
-                <StackPanel>
-                    <GroupBox
-                        Margin="16"
-                        Padding="-8,8"
-                        Header="Polecane stacje">
+            <ScrollViewer Margin="0,16,0,0">
+                <StackPanel Margin="24,0">
+                    <GroupBox Padding="-8,8" Header="Polecane stacje">
                         <ListView
                             ItemTemplate="{StaticResource RadioStationGridItem}"
                             ItemsSource="{Binding FeaturedStations}"
@@ -43,7 +40,7 @@
                         </ListView>
                     </GroupBox>
                     <GroupBox
-                        Margin="16,0"
+                        Margin="0,16,0,0"
                         Padding="-8,8"
                         Header="Wybrane dla Ciebie">
                         <Grid>

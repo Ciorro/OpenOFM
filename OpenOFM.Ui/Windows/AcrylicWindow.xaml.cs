@@ -53,7 +53,8 @@ namespace OpenOFM.Ui.Windows
             WindowChrome.SetWindowChrome(this, new WindowChrome
             {
                 GlassFrameThickness = new Thickness(-1),
-                NonClientFrameEdges = NonClientFrameEdges.None
+                NonClientFrameEdges = NonClientFrameEdges.None,
+                CaptionHeight = 50
             });
         }
 
