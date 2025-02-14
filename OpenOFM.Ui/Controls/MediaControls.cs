@@ -20,7 +20,6 @@ namespace OpenOFM.Ui.Controls
             _delayRefreshTimer.Interval = TimeSpan.FromSeconds(0.5);
             _delayRefreshTimer.Tick += (sender, args) =>
             {
-                Console.WriteLine("sdeer");
                 GetBindingExpression(DelayProperty).UpdateTarget();
             };
             _delayRefreshTimer.Start();
@@ -121,7 +120,6 @@ namespace OpenOFM.Ui.Controls
             "Delay",
             typeof(TimeSpan),
             typeof(MediaControls),
-            new FrameworkPropertyMetadata(TimeSpan.Zero,
-                FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+            new FrameworkPropertyMetadata(TimeSpan.Zero));
     }
 }
