@@ -7,41 +7,21 @@ using OpenOFM.Core.Settings.Configurations;
 using OpenOFM.Ui.Input;
 using OpenOFM.Ui.Navigation;
 using System.Windows.Input;
-using System.Windows.Threading;
 
 namespace OpenOFM.Ui.ViewModels
 {
     internal partial class ApplicationViewModel : ObservableObject
     {
         private readonly INavigationService _navigation;
-        private readonly IPlayerService _playerService;
-        private readonly ISettingsProvider<AppSettings> _settings;
-
-        [ObservableProperty]
-        private bool _isPaused;
-
-        [ObservableProperty]
-        private bool _isMuted;
-
-        [ObservableProperty]
-        private float _volume = 100;
-
-        [ObservableProperty]
-        private TimeSpan _delay;
 
         [ObservableProperty]
         private RadioStation? _currentStation;
 
+        [ObservableProperty]
+        private MediaControlsViewModel? _mediaControlsViewModel;
+
         public ApplicationViewModel(INavigationService navigation, IPlayerService playerService, ISettingsProvider<AppSettings> settings)
         {
-            _playerService = playerService;
-            _playerService.StationChanged += (sender, station) =>
-            {
-                IsPaused = false;
-                Delay = TimeSpan.Zero;
-                CurrentStation = station;
-            };
-
             _navigation = navigation;
             _navigation.Navigated += (pageKey) =>
             {
@@ -50,33 +30,21 @@ namespace OpenOFM.Ui.ViewModels
             };
             _navigation.Navigate("Home");
 
-            _settings = settings;
-            Volume = _settings.CurrentSettings.Volume;
-            IsMuted = _settings.CurrentSettings.IsMuted;
-
-            var delayRefreshTimer = new DispatcherTimer();
-            delayRefreshTimer.Interval = TimeSpan.FromSeconds(1);
-            delayRefreshTimer.Tick += (_, __) =>
+            playerService.StationChanged += (sender, station) =>
             {
-                Delay = _playerService.GetDelay();
-            };
-            delayRefreshTimer.Start();
+                CurrentStation = station;
 
-            KeyboardListener.KeyPressed += (key) =>
-            {
-                switch (key)
+                if (station is not null)
                 {
-                    case Key.MediaPlayPause:
-                        IsPaused = !IsPaused;
-                        break;
-                    case Key.MediaPreviousTrack:
-                        PreviousStation();
-                        break;
-                    case Key.MediaNextTrack:
-                        NextStation();
-                        break;
+                    MediaControlsViewModel = new MediaControlsViewModel(playerService, settings);
+                }
+                else
+                {
+                    MediaControlsViewModel = null;
                 }
             };
+
+            KeyboardListener.KeyPressed += OnGlobalKeyPressed;
         }
 
         public IPage? CurrentPage
@@ -95,52 +63,41 @@ namespace OpenOFM.Ui.ViewModels
 
         [RelayCommand]
         private void NavigateBack()
-            => _navigation.Back();
+        {
+            _navigation.Back();
+        }
 
         [RelayCommand]
         private void NavigateForward()
-            => _navigation.Forward();
-
-        [RelayCommand]
-        private async Task PreviousStation()
         {
-            await _playerService.PlayPrevious();
+            _navigation.Forward();
         }
 
-        [RelayCommand]
-        private async Task NextStation()
+        private async void OnGlobalKeyPressed(Key key)
         {
-            await _playerService.PlayNext();
-        }
-
-        partial void OnIsPausedChanged(bool value)
-        {
-            _playerService.IsPaused = value;
-        }
-
-        partial void OnIsMutedChanged(bool value)
-        {
-            if (value)
+            if (MediaControlsViewModel is not null)
             {
-                _playerService.Volume = 0;
+                try
+                {
+                    switch (key)
+                    {
+                        case Key.MediaPlayPause:
+                            MediaControlsViewModel.IsPaused = !MediaControlsViewModel.IsPaused;
+                            break;
+                        case Key.MediaPreviousTrack:
+                            await MediaControlsViewModel.PlayPreviousStationCommand.ExecuteAsync(null);
+                            break;
+                        case Key.MediaNextTrack:
+                            await MediaControlsViewModel.PlayNextStationCommand.ExecuteAsync(null);
+                            break;
+                    }
+                }
+                catch (Exception e)
+                {
+                    //TODO: Log
+                    Console.WriteLine(e.ToString());
+                }
             }
-            else
-            {
-                _playerService.Volume = Volume / 100f;
-            }
-
-            _settings.CurrentSettings.IsMuted = value;
-            _settings.Save();
-        }
-
-        partial void OnVolumeChanged(float value)
-        {
-            if (!IsMuted)
-            {
-                _playerService.Volume = value / 100f;
-            }
-
-            _settings.CurrentSettings.Volume = value;
         }
     }
 }

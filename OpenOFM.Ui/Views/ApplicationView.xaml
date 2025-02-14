@@ -151,16 +151,17 @@
                         BorderThickness="0,1,0,0"
                         Visibility="{Binding CurrentStation, Converter={converters:ValueNotEqualsToVisibilityConverter}}">
                         <controls:MediaControls
+                            DataContext="{Binding MediaControlsViewModel}"
                             Delay="{Binding Delay}"
                             IsMuted="{Binding IsMuted}"
                             IsPaused="{Binding IsPaused}"
                             Volume="{Binding Volume}">
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="PreviousClicked">
-                                    <i:InvokeCommandAction Command="{Binding PreviousStationCommand}" />
+                                    <i:InvokeCommandAction Command="{Binding PlayPreviousStationCommand}" />
                                 </i:EventTrigger>
                                 <i:EventTrigger EventName="NextClicked">
-                                    <i:InvokeCommandAction Command="{Binding NextStationCommand}" />
+                                    <i:InvokeCommandAction Command="{Binding PlayNextStationCommand}" />
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
                         </controls:MediaControls>

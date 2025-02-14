@@ -1,14 +1,29 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Threading;
 
 namespace OpenOFM.Ui.Controls
 {
     internal class MediaControls : Control
     {
+        private readonly DispatcherTimer _delayRefreshTimer;
+
         static MediaControls()
         {
             DefaultStyleKeyProperty.OverrideMetadata(
                 typeof(MediaControls), new FrameworkPropertyMetadata(typeof(MediaControls)));
+        }
+
+        public MediaControls()
+        {
+            _delayRefreshTimer = new DispatcherTimer();
+            _delayRefreshTimer.Interval = TimeSpan.FromSeconds(0.5);
+            _delayRefreshTimer.Tick += (sender, args) =>
+            {
+                Console.WriteLine("sdeer");
+                GetBindingExpression(DelayProperty).UpdateTarget();
+            };
+            _delayRefreshTimer.Start();
         }
 
         public override void OnApplyTemplate()
