@@ -1,11 +1,13 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using OpenOFM.Core.Models;
 using OpenOFM.Core.Services.Player;
 using OpenOFM.Core.Services.Playlists;
 using OpenOFM.Core.Services.Stations;
 using OpenOFM.Ui.Navigation.Attributes;
 using OpenOFM.Ui.ViewModels.Items;
 using System.Windows;
+using System.Windows.Data;
 
 namespace OpenOFM.Ui.ViewModels.Pages
 {
@@ -19,6 +21,7 @@ namespace OpenOFM.Ui.ViewModels.Pages
         private CancellationTokenSource? _loadingCancellationToken;
 
         [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(RadioStationCategories))]
         private List<RadioStationItemViewModel>? _radioStations;
 
         public StationsPageViewModel(
@@ -45,6 +48,35 @@ namespace OpenOFM.Ui.ViewModels.Pages
                 {
                     _playerService.Play(value.Station);
                 }
+            }
+        }
+
+        public IEnumerable<RadioCategory>? RadioStationCategories
+        {
+            get => RadioStations?.SelectMany(x => x.Categories).Distinct();
+        }
+
+        public IEnumerable<object> SelectedCategories
+        {
+            set
+            {
+                var collectionView = CollectionViewSource.GetDefaultView(RadioStations);
+                var selectedCategories = value.Select(x => (RadioCategory)x);
+
+                if (selectedCategories.Any())
+                {
+                    collectionView.Filter = (item) =>
+                    {
+                        return (item as RadioStationItemViewModel)?.Categories
+                            .Intersect(selectedCategories).Any() ?? false;
+                    };
+                }
+                else
+                {
+                    collectionView.Filter = null;
+                }
+
+                collectionView.Refresh();
             }
         }
 

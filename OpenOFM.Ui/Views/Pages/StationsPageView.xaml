@@ -3,6 +3,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="clr-namespace:OpenOFM.Ui.Controls"
     xmlns:converters="clr-namespace:OpenOFM.Ui.Converters"
+    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
     xmlns:viewmodels="clr-namespace:OpenOFM.Ui.ViewModels.Pages">
     <DataTemplate DataType="{x:Type viewmodels:StationsPageViewModel}">
         <DockPanel>
@@ -13,8 +14,56 @@
                 Stacje radiowe
             </TextBlock>
 
+            <ListBox
+                Margin="24,16"
+                Background="Transparent"
+                DockPanel.Dock="Top"
+                ItemsSource="{Binding RadioStationCategories}"
+                SelectionMode="Multiple">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="SelectionChanged">
+                        <i:ChangePropertyAction
+                            PropertyName="SelectedCategories"
+                            TargetObject="{Binding}"
+                            Value="{Binding SelectedItems, RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}" />
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+                <ListBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel Margin="-2" />
+                    </ItemsPanelTemplate>
+                </ListBox.ItemsPanel>
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock FontSize="12" Text="{Binding Name}" />
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+                <ListBox.ItemContainerStyle>
+                    <Style BasedOn="{StaticResource DefaultListBoxItemStyle}" TargetType="ListBoxItem">
+                        <Setter Property="Border.CornerRadius" Value="16" />
+                        <Setter Property="Margin" Value="2" />
+                        <Setter Property="Padding" Value="8" />
+                        <Setter Property="BorderThickness" Value="1" />
+                        <Setter Property="BorderBrush" Value="{DynamicResource CircleElevationBorderBrush}" />
+                        <Setter Property="Background" Value="{DynamicResource ControlFillColorDefaultBrush}" />
+                    </Style>
+                </ListBox.ItemContainerStyle>
+                <ListBox.Style>
+                    <Style BasedOn="{StaticResource DefaultListBoxStyle}" TargetType="ListBox">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding ActualWidth, RelativeSource={RelativeSource Self}, Converter={converters:ValueLessThanToBoolConverter}, ConverterParameter=850.0}" Value="True">
+                                <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto" />
+                                <Setter Property="Padding" Value="0,0,0,10" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding ActualWidth, RelativeSource={RelativeSource Self}, Converter={converters:ValueLessThanToBoolConverter}, ConverterParameter=850.0}" Value="False">
+                                <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </ListBox.Style>
+            </ListBox>
+
             <ListView
-                Margin="0,16,0,0"
                 Padding="16,0,24,0"
                 ItemTemplate="{StaticResource RadioStationListItem}"
                 ItemsSource="{Binding RadioStations}"
