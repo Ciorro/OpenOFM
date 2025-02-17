@@ -6,6 +6,7 @@ using OpenOFM.Core.Settings.Configurations;
 using OpenOFM.Ui.Navigation.Attributes;
 using System.Diagnostics;
 using System.IO;
+using System.Reflection;
 using System.Windows;
 
 namespace OpenOFM.Ui.ViewModels.Pages
@@ -42,6 +43,11 @@ namespace OpenOFM.Ui.ViewModels.Pages
                     _settings.Save();
                 }
             }
+        }
+
+        public string AppVersion
+        {
+            get => Assembly.GetExecutingAssembly().GetName().Version!.ToString();
         }
 
         public override void OnPaused()

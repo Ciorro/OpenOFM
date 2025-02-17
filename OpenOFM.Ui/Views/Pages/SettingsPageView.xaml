@@ -73,7 +73,10 @@
                                 <StackPanel>
                                     <GroupBox Header="Informacje">
                                         <StackPanel>
-                                            <TextBlock Margin="0,2">Open OFM v1.1</TextBlock>
+                                            <TextBlock Margin="0,2">
+                                                <Run>Open OFM</Run>
+                                                <Run Text="{Binding AppVersion, Mode=OneTime}" />
+                                            </TextBlock>
                                             <TextBlock Margin="0,2">Open OFM nie jest oficjalną aplikacją OpenFM.</TextBlock>
                                             <TextBlock Margin="0,2">
                                                 <Hyperlink Command="{Binding OpenLinkCommand}" CommandParameter="http://open.fm/">Oficjalna strona OpenFM</Hyperlink>
