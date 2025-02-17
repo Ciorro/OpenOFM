@@ -7,6 +7,14 @@
     xmlns:viewmodels="clr-namespace:OpenOFM.Ui.ViewModels.Pages">
     <DataTemplate DataType="{x:Type viewmodels:StationsPageViewModel}">
         <DockPanel>
+            <controls:XamlTimer Interval="00:00:05">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="Tick">
+                        <i:InvokeCommandAction Command="{Binding UpdatePlaylistsCommand}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </controls:XamlTimer>
+            
             <TextBlock
                 Margin="24,16,0,0"
                 DockPanel.Dock="Top"

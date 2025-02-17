@@ -7,12 +7,21 @@
     xmlns:pagesVms="clr-namespace:OpenOFM.Ui.ViewModels.Pages">
     <DataTemplate DataType="{x:Type pagesVms:HomePageViewModel}">
         <DockPanel>
+            <controls:XamlTimer Interval="00:00:05">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="Tick">
+                        <i:InvokeCommandAction Command="{Binding UpdatePlaylistsCommand}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </controls:XamlTimer>
+            
             <TextBlock
                 Margin="24,16,0,0"
                 DockPanel.Dock="Top"
                 Style="{StaticResource TitleTextBlockStyle}">
                 Strona główna
             </TextBlock>
+            
             <ScrollViewer Margin="0,16,0,0">
                 <StackPanel Margin="24,0">
                     <GroupBox Padding="-8,8" Header="Polecane stacje">
@@ -39,6 +48,7 @@
                             </ListView.ItemContainerStyle>
                         </ListView>
                     </GroupBox>
+                    
                     <GroupBox
                         Margin="0,16,0,0"
                         Padding="-8,8"
